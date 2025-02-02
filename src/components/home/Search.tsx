@@ -1,5 +1,5 @@
 import Button from 'components/Button';
-import React from 'react';
+import React, { FormEventHandler } from 'react';
 
 export const LOCAL_STORAGE_KEY = '__search';
 
@@ -21,19 +21,20 @@ class Search extends React.PureComponent<SearchProps, { inputValue: string }> {
     this.setState({ inputValue: e.target.value });
   };
 
-  componentWillUnmount(): void {
+  // componentWillUnmount(): void {
+  //   window.localStorage.setItem(LOCAL_STORAGE_KEY, this.state.inputValue);
+  // }
+
+  onSubmit: FormEventHandler = (ev) => {
+    ev.preventDefault();
     window.localStorage.setItem(LOCAL_STORAGE_KEY, this.state.inputValue);
-  }
+    this.props.onSubmit(this.state.inputValue);
+  };
 
   render() {
     return (
       <div>
-        <form
-          onSubmit={(ev) => {
-            ev.preventDefault();
-            this.props.onSubmit(this.state.inputValue);
-          }}
-        >
+        <form onSubmit={this.onSubmit}>
           <input
             type="text"
             placeholder="Search"
