@@ -34,7 +34,7 @@ class Home extends React.Component<Record<string, never>, HomeState> {
 
   render() {
     return (
-      <div className="container mx-auto flex flex-col">
+      <div className="container mx-auto flex flex-col px-2">
         <Search value={this.state.search} onSubmit={this.onSubmit} />
         <Results search={this.state.search} />
         <Button className="self-end m-2" variant="warn" onClick={this.setError}>

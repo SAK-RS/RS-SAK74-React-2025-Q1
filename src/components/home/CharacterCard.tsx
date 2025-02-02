@@ -3,7 +3,7 @@ import { Character } from 'types';
 
 const CharacterCard: FC<{ character: Character }> = ({ character }) => {
   return (
-    <div className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center">
+    <div className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100">
       <img
         src={character.image}
         alt={character.name}
