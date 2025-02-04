@@ -14,18 +14,14 @@ const Button: FC<PropsWithChildren<ButtonProps>> = ({
 }) => {
   return (
     <button
-      className={
-        cn(
-          'border-2  cursor-pointer max-w-max px-4 py-2 rounded-md  hover:text-white',
-          {
-            'border-primary hover:bg-primary': variant === 'primary',
-            'border-red-500 hover:bg-red-500/70': variant === 'warn',
-          },
-          className
-        )
-        // 'border-2 border-primary cursor-pointer max-w-max px-4 py-2 rounded-md hover:bg-primary hover:text-white' +
-        // ` ${className ?? ''}`
-      }
+      className={cn(
+        'border-2  cursor-pointer max-w-max px-4 py-2 rounded-md  hover:text-white',
+        {
+          'border-primary hover:bg-primary': variant === 'primary',
+          'border-red-500 hover:bg-red-500/70': variant === 'warn',
+        },
+        className
+      )}
       {...props}
     >
       {children}

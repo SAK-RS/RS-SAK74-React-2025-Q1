@@ -55,7 +55,7 @@ class Results extends React.Component<ResultsProps, ResultsState> {
           </div>
         )}
 
-        <Spinner loading={this.state.isLoading} />
+        <Spinner loading={this.state.isLoading} size="large" />
         {this.state.error && (
           <div className="text-red-500 text-2xl">{this.state.error}... 😥 </div>
         )}

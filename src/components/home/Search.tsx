@@ -21,10 +21,6 @@ class Search extends React.PureComponent<SearchProps, { inputValue: string }> {
     this.setState({ inputValue: e.target.value });
   };
 
-  // componentWillUnmount(): void {
-  //   window.localStorage.setItem(LOCAL_STORAGE_KEY, this.state.inputValue);
-  // }
-
   onSubmit: FormEventHandler = (ev) => {
     ev.preventDefault();
     window.localStorage.setItem(LOCAL_STORAGE_KEY, this.state.inputValue);
