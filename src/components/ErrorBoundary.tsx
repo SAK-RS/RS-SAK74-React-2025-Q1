@@ -24,6 +24,9 @@ class ErrorBoundary extends React.Component<PropsWithChildren, ComponentState> {
         <div>
           <h1>Something went wrong...</h1>
           <p className="text-red-500">{this.state.errorStack}</p>
+          <p className="mt-6 text-2xl italic text-primary">
+            Try refresh the page
+          </p>
         </div>
       );
     }
