@@ -12,9 +12,13 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/vite": "^4.0.3",
+    "axios": "^1.7.9",
+    "clsx": "^2.1.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
     "tailwindcss": "^4.0.3"
   },
   "devDependencies": {
@@ -32,7 +36,7 @@
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
-    "prettier": "^3.4.2",
+    "prettier": "3.4.2",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5",
