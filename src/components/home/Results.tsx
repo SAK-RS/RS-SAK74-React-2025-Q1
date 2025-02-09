@@ -1,67 +1,70 @@
-import { getCharacters } from 'api/getCharacters';
-import React from 'react';
+import { getCharacters } from 'api';
+import React, { useRef } from 'react';
 import { Character } from 'types';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
+import Pagination from './Pagination';
 
 interface ResultsProps {
   search: string;
 }
 
-interface ResultsState {
-  characters: Character[];
-  isLoading: boolean;
-  error?: string;
-}
+const Results: React.FC<ResultsProps> = ({ search }) => {
+  const [characters, setCharacters] = React.useState<Character[]>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<string>();
+  const [page, setPage] = React.useState(1);
+  const totalPages = useRef(1);
 
-class Results extends React.Component<ResultsProps, ResultsState> {
-  state: Readonly<ResultsState> = {
-    characters: [],
-    isLoading: false,
-  };
-
-  fetchCharacters = async (search: string) => {
-    this.setState({ isLoading: true, error: undefined, characters: [] });
+  const fetchCharacters = async (search: string, page?: number) => {
+    setCharacters([]);
+    setIsLoading(true);
+    setError(undefined);
     try {
-      const characters = await getCharacters(search);
-      this.setState({ characters });
+      const response = await getCharacters({ name: search, page });
+      const {
+        results: characters,
+        info: { pages },
+      } = response;
+      setCharacters(characters);
+      totalPages.current = pages;
     } catch (err) {
       if (typeof err === 'string') {
-        this.setState({ error: err });
+        setError(err);
       }
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
   };
 
-  componentDidUpdate(prevProps: Readonly<ResultsProps>): void {
-    if (prevProps.search !== this.props.search) {
-      this.fetchCharacters(this.props.search);
-    }
-  }
+  React.useEffect(() => {
+    fetchCharacters(search, page);
+  }, [search, page]);
 
-  componentDidMount(): void {
-    this.fetchCharacters(this.props.search);
-  }
-
-  render() {
-    return (
-      <div className="my-6">
-        {this.state.characters && (
+  return (
+    <div className="my-6">
+      {characters.length ? (
+        <div className="flex flex-col">
           <div className="flex flex-wrap gap-4 justify-around">
-            {this.state.characters.map((character) => (
+            {characters.map((character) => (
               <CharacterCard key={character.id} character={character} />
             ))}
           </div>
-        )}
+          <Pagination
+            className="self-start ml-4"
+            page={page}
+            totalPages={totalPages.current}
+            setPage={(page) => {
+              setPage(page);
+            }}
+          />
+        </div>
+      ) : null}
 
-        <Spinner loading={this.state.isLoading} size="large" />
-        {this.state.error && (
-          <div className="text-red-500 text-2xl">{this.state.error}... 😥 </div>
-        )}
-      </div>
-    );
-  }
-}
+      <Spinner loading={isLoading} size="large" />
+      {error && <div className="text-red-500 text-2xl">{error}... 😥 </div>}
+    </div>
+  );
+};
 
 export default Results;
