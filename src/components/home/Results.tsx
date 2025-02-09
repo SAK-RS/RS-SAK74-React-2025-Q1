@@ -4,6 +4,7 @@ import { Character } from 'types';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
+import { useSearchParams } from 'react-router';
 
 interface ResultsProps {
   search: string;
@@ -37,7 +38,10 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
     }
   };
 
+  const [, setSearchParams] = useSearchParams();
+
   React.useEffect(() => {
+    setSearchParams({ page: page.toString() });
     fetchCharacters(search, page);
   }, [search, page]);
 
