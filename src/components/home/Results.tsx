@@ -62,15 +62,15 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
   return (
     <div className="my-6">
       {characters.length ? (
-        <div className="flex">
-          <div
-            className="flex flex-col"
-            onClick={() => {
-              if (location.pathname !== '/search') {
-                closeDetails();
-              }
-            }}
-          >
+        <div
+          className="flex justify-between"
+          onClick={() => {
+            if (location.pathname !== '/search') {
+              closeDetails();
+            }
+          }}
+        >
+          <div className="flex flex-col">
             <div className="flex flex-wrap gap-4 justify-around">
               {characters.map((character) => (
                 <Link

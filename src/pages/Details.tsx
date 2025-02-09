@@ -39,9 +39,12 @@ export const Details = () => {
       className={cn(
         'w-0 h-full bg-gray-400 text-gray-600 transition-[width] duration-1000 ease-in-out border border-primary rounded-sm py-4 relative',
         {
-          'w-full': isOpened,
+          'w-full max-w-lg': isOpened,
         }
       )}
+      onClick={(ev) => {
+        ev.stopPropagation();
+      }}
     >
       <div
         className="absolute right-2 top-2 cursor-pointer"

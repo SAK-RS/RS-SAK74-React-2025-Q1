@@ -1,5 +1,10 @@
 import Button from 'components/Button';
-import React, { FormEventHandler } from 'react';
+import {
+  useState,
+  type ChangeEventHandler,
+  type FC,
+  type FormEventHandler,
+} from 'react';
 
 export const LOCAL_STORAGE_KEY = '__search';
 
@@ -8,41 +13,35 @@ interface SearchProps {
   onSubmit: (search: string) => void;
 }
 
-class Search extends React.PureComponent<SearchProps, { inputValue: string }> {
-  constructor(props: SearchProps) {
-    super(props);
-    this.state = {
-      inputValue: props.value,
-    };
-    this.onChange = this.onChange.bind(this);
-  }
+const Search: FC<SearchProps> = ({ onSubmit, value }) => {
+  const [inputValue, setInputValue] = useState(() => value);
 
-  onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    this.setState({ inputValue: e.target.value });
-  };
-
-  onSubmit: FormEventHandler = (ev) => {
+  const handleSubmit: FormEventHandler = (ev) => {
     ev.preventDefault();
-    window.localStorage.setItem(LOCAL_STORAGE_KEY, this.state.inputValue);
-    this.props.onSubmit(this.state.inputValue);
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, inputValue);
+    onSubmit(inputValue);
   };
 
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.onSubmit}>
-          <input
-            type="text"
-            placeholder="Search"
-            className=""
-            value={this.state.inputValue}
-            onChange={this.onChange}
-          />
-          <Button>Search</Button>
-        </form>
-      </div>
-    );
-  }
-}
+  const handleChange: ChangeEventHandler<HTMLInputElement> = ({
+    target: { value },
+  }) => {
+    setInputValue(value);
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Search"
+          className=""
+          value={inputValue}
+          onChange={handleChange}
+        />
+        <Button>Search</Button>
+      </form>
+    </div>
+  );
+};
 
 export default Search;
