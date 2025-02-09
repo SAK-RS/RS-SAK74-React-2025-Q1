@@ -1,10 +1,16 @@
 import { getCharacters } from 'api';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Character } from 'types';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
-import { useSearchParams } from 'react-router';
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router';
 
 interface ResultsProps {
   search: string;
@@ -38,30 +44,59 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
     }
   };
 
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  React.useEffect(() => {
-    setSearchParams({ page: page.toString() });
+  useEffect(() => {
+    setSearchParams({ searchPage: page.toString() });
     fetchCharacters(search, page);
   }, [search, page]);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const closeDetails = () => {
+    navigate({ pathname: '/search', search: searchParams.toString() });
+  };
 
   return (
     <div className="my-6">
       {characters.length ? (
-        <div className="flex flex-col">
-          <div className="flex flex-wrap gap-4 justify-around">
-            {characters.map((character) => (
-              <CharacterCard key={character.id} character={character} />
-            ))}
-          </div>
-          <Pagination
-            className="self-start ml-4"
-            page={page}
-            totalPages={totalPages.current}
-            setPage={(page) => {
-              setPage(page);
+        <div className="flex">
+          <div
+            className="flex flex-col"
+            onClick={() => {
+              if (location.pathname !== '/search') {
+                closeDetails();
+              }
             }}
-          />
+          >
+            <div className="flex flex-wrap gap-4 justify-around">
+              {characters.map((character) => (
+                <Link
+                  key={character.id}
+                  to={{
+                    pathname: `details/${character.id}`,
+                    search: searchParams.toString(),
+                  }}
+                  onClick={() => {
+                    // ev.stopPropagation();
+                  }}
+                >
+                  <CharacterCard character={character} />
+                </Link>
+              ))}
+            </div>
+            <Pagination
+              className="self-start ml-4"
+              page={page}
+              totalPages={totalPages.current}
+              setPage={(page) => {
+                setPage(page);
+              }}
+            />
+          </div>
+          <Outlet context={{ closeDetails }} />
         </div>
       ) : null}
 

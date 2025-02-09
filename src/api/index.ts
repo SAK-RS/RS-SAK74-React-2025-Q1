@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 import { CharacterResponse } from './types';
 import { axiosInstance } from './setup';
+import { Character } from 'types';
 
 type SearchType = {
   name?: string;
@@ -32,4 +33,8 @@ export async function getCharacters(
     }
     return Promise.reject(message);
   }
+}
+
+export async function getCharacterById(id: string) {
+  return (await axiosInstance.get<Character>(`/character/${id}`)).data;
 }
