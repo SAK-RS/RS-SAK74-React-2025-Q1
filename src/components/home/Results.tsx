@@ -71,7 +71,10 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
           }}
         >
           <div className="flex flex-col">
-            <div className="flex flex-wrap gap-4 justify-around">
+            <div
+              className="flex flex-wrap gap-4 justify-around"
+              data-testid="list"
+            >
               {characters.map((character) => (
                 <Link
                   key={character.id}
@@ -82,6 +85,7 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
                   onClick={() => {
                     // ev.stopPropagation();
                   }}
+                  data-testid="card"
                 >
                   <CharacterCard character={character} />
                 </Link>
@@ -101,7 +105,11 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
       ) : null}
 
       <Spinner loading={isLoading} size="large" />
-      {error && <div className="text-red-500 text-2xl">{error}... 😥 </div>}
+      {error && (
+        <div className="text-red-500 text-2xl" data-testid="error-message">
+          {error}... 😥{' '}
+        </div>
+      )}
     </div>
   );
 };
