@@ -1,15 +1,6 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
 import viteConfig from './vite.config';
 
-export const a = defineConfig({
-  test: {
-    globals: true,
-    include: ['src/**/*.test.tsx'],
-    environment: 'jsdom',
-    setupFiles: './src/tests/setup.ts',
-  },
-});
-
 export default mergeConfig(
   viteConfig,
   defineConfig({
@@ -20,7 +11,16 @@ export default mergeConfig(
       setupFiles: './src/tests/setup.ts',
       coverage: {
         include: ['src/**/*.tsx'],
-        exclude: ['**/*.test.tsx', 'App.tsx', 'main.tsx', '/utils/**'],
+        exclude: [
+          '**/*.test.tsx',
+          'src/App.tsx',
+          'src/main.tsx',
+          'src/utils/**',
+          'src/routes.tsx',
+          'src/**/ErrorBoundary.tsx',
+          'src/**/ErrorElement.tsx',
+        ],
+        clean: true,
       },
     },
   })

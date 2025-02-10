@@ -25,7 +25,11 @@ const Pagination: FC<PaginationProps> = ({
   };
 
   return (
-    <div className={cn('space-x-4 mt-4', className)} {...other}>
+    <div
+      className={cn('space-x-4 mt-4', className)}
+      {...other}
+      data-testid="pagination"
+    >
       <Button
         size="small"
         name="decrease"
