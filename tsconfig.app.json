@@ -23,7 +23,8 @@
     "noUncheckedSideEffectImports": true,
 
     /* custom */
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "types": ["vitest/globals", "vitest-dom/extend-expect"]
   },
   "include": ["src"]
 }

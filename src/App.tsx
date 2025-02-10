@@ -1,39 +1,22 @@
 import Header from 'components/Header';
 import 'App.css';
-import Home from 'pages/Home';
 import Footer from 'components/Footer';
-import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router';
+import { routes } from 'routes';
+import { BASE_URL } from '../base';
 
-interface AppState {
-  isHomeMounted: boolean;
-}
+const router = createBrowserRouter(routes, {
+  basename: BASE_URL,
+});
 
-class App extends React.Component<Record<string, never>, AppState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = { isHomeMounted: true };
-  }
-
-  onUnmount = (): void => {
-    this.setState((prev) => ({ isHomeMounted: !prev.isHomeMounted }));
-  };
-  render(): React.ReactNode {
-    return (
-      <>
-        <Header />
-        <div
-          className="cursor-pointer"
-          onClick={() => {
-            this.onUnmount();
-          }}
-        >
-          Unmount/Mount Home page
-        </div>
-        {this.state.isHomeMounted && <Home />}
-        <Footer />
-      </>
-    );
-  }
-}
+const App = () => {
+  return (
+    <>
+      <Header />
+      <RouterProvider router={router} />
+      <Footer />
+    </>
+  );
+};
 
 export default App;

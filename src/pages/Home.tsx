@@ -1,52 +1,43 @@
 import Button from 'components/Button';
 import Results from 'components/home/Results';
 import Search from 'components/home/Search';
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 export const LOCAL_STORAGE_KEY = '__search';
 
-interface HomeState {
-  search: string;
-  isError?: boolean;
-}
+const Home = () => {
+  const [search, setSearch] = useState(
+    () => window.localStorage.getItem(LOCAL_STORAGE_KEY) || ''
+  );
+  const [isError, setIsError] = useState(false);
 
-class Home extends React.Component<Record<string, never>, HomeState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    this.state = {
-      search: window.localStorage.getItem(LOCAL_STORAGE_KEY) || '',
-    };
-  }
-
-  onSubmit = (search: string): void => {
-    this.setState({ search });
+  const onSubmit = (search: string): void => {
+    setSearch(search);
   };
 
-  setError = () => {
-    this.setState({ isError: true });
+  const setError = () => {
+    setIsError(true);
   };
 
-  componentDidUpdate(): void {
-    if (this.state.isError) {
+  useEffect(() => {
+    if (isError) {
       throw new Error('Error thrown from Home page');
     }
-  }
+  }, [isError]);
 
-  render() {
-    return (
-      <div className="container mx-auto flex flex-col px-2">
-        <Search value={this.state.search} onSubmit={this.onSubmit} />
-        <Results search={this.state.search} />
-        <Button
-          className="fixed right-2 bottom-2 bg-gray-100"
-          variant="warn"
-          onClick={this.setError}
-        >
-          Throw error
-        </Button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="container mx-auto flex flex-col px-2">
+      <Search value={search} onSubmit={onSubmit} />
+      <Results search={search} />
+      <Button
+        className="fixed right-2 bottom-2 bg-gray-100"
+        variant="warn"
+        onClick={setError}
+      >
+        Throw error
+      </Button>
+    </div>
+  );
+};
 
 export default Home;

@@ -1,0 +1,150 @@
+{
+  "info": {
+    "count": 7,
+    "pages": 1,
+    "next": null,
+    "prev": null
+  },
+  "results": [
+    {
+      "id": 64,
+      "name": "Chris",
+      "status": "Dead",
+      "species": "Alien",
+      "type": "Organic gun",
+      "gender": "unknown",
+      "origin": {
+        "name": "unknown",
+        "url": ""
+      },
+      "location": {
+        "name": "Earth (Replacement Dimension)",
+        "url": "https://rickandmortyapi.com/api/location/20"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/64.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/12"],
+      "url": "https://rickandmortyapi.com/api/character/64",
+      "created": "2017-11-05T12:25:03.541Z"
+    },
+    {
+      "id": 65,
+      "name": "Chris",
+      "status": "Alive",
+      "species": "Humanoid",
+      "type": "Microverse inhabitant",
+      "gender": "Male",
+      "origin": {
+        "name": "Rick's Battery Microverse",
+        "url": "https://rickandmortyapi.com/api/location/24"
+      },
+      "location": {
+        "name": "Rick's Battery Microverse",
+        "url": "https://rickandmortyapi.com/api/location/24"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/65.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/17"],
+      "url": "https://rickandmortyapi.com/api/character/65",
+      "created": "2017-11-30T11:02:41.935Z"
+    },
+    {
+      "id": 195,
+      "name": "Kristen Stewart",
+      "status": "Alive",
+      "species": "Human",
+      "type": "",
+      "gender": "Female",
+      "origin": {
+        "name": "Earth (C-500A)",
+        "url": "https://rickandmortyapi.com/api/location/23"
+      },
+      "location": {
+        "name": "Earth (C-500A)",
+        "url": "https://rickandmortyapi.com/api/location/23"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/195.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/8"],
+      "url": "https://rickandmortyapi.com/api/character/195",
+      "created": "2017-12-30T12:19:16.042Z"
+    },
+    {
+      "id": 296,
+      "name": "Risotto Groupon",
+      "status": "Dead",
+      "species": "Alien",
+      "type": "Blue ape alien",
+      "gender": "Male",
+      "origin": {
+        "name": "Resort Planet",
+        "url": "https://rickandmortyapi.com/api/location/37"
+      },
+      "location": {
+        "name": "Resort Planet",
+        "url": "https://rickandmortyapi.com/api/location/37"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/296.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/26"],
+      "url": "https://rickandmortyapi.com/api/character/296",
+      "created": "2017-12-31T20:32:33.361Z"
+    },
+    {
+      "id": 297,
+      "name": "Risotto's Tentacled Henchman",
+      "status": "Dead",
+      "species": "Alien",
+      "type": "Tentacle alien",
+      "gender": "Male",
+      "origin": {
+        "name": "Resort Planet",
+        "url": "https://rickandmortyapi.com/api/location/37"
+      },
+      "location": {
+        "name": "Resort Planet",
+        "url": "https://rickandmortyapi.com/api/location/37"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/297.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/26"],
+      "url": "https://rickandmortyapi.com/api/character/297",
+      "created": "2017-12-31T20:34:58.394Z"
+    },
+    {
+      "id": 601,
+      "name": "Christmas Storyteller",
+      "status": "Alive",
+      "species": "Alien",
+      "type": "Soulless Puppet",
+      "gender": "Male",
+      "origin": {
+        "name": "Story Train",
+        "url": "https://rickandmortyapi.com/api/location/96"
+      },
+      "location": {
+        "name": "Story Train",
+        "url": "https://rickandmortyapi.com/api/location/96"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/601.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/37"],
+      "url": "https://rickandmortyapi.com/api/character/601",
+      "created": "2020-08-06T11:41:34.260Z"
+    },
+    {
+      "id": 608,
+      "name": "Jesus Christ",
+      "status": "Alive",
+      "species": "Human",
+      "type": "Soulless Puppet",
+      "gender": "Male",
+      "origin": {
+        "name": "Ricks’s Story",
+        "url": "https://rickandmortyapi.com/api/location/100"
+      },
+      "location": {
+        "name": "Ricks’s Story",
+        "url": "https://rickandmortyapi.com/api/location/100"
+      },
+      "image": "https://rickandmortyapi.com/api/character/avatar/608.jpeg",
+      "episode": ["https://rickandmortyapi.com/api/episode/37"],
+      "url": "https://rickandmortyapi.com/api/character/608",
+      "created": "2020-08-06T12:36:05.897Z"
+    }
+  ]
+}

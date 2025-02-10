@@ -12,7 +12,7 @@ export const MySpinner: FC<SpinnerProps> = ({
   className,
 }) => {
   const _className = cn(
-    'mx-auto rounded-full border-blue-300 border-l-blue-600 animate-spin',
+    'mx-auto rounded-full border-blue-300 border-l-blue-600 animate-spin text-transparent',
     {
       'size-6 border-3': size === 'small',
       'size-12 border-6': size === 'medium',
@@ -20,7 +20,7 @@ export const MySpinner: FC<SpinnerProps> = ({
     },
     className
   );
-  return <>{loading && <div className={_className}></div>}</>;
+  return <>{loading && <div className={_className}>loading</div>}</>;
 };
 
 export default MySpinner;
