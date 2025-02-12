@@ -49,7 +49,14 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
   useEffect(() => {
     setSearchParams({ searchPage: page.toString() });
     fetchCharacters(search, page);
-  }, [search, page]);
+  }, [page]);
+
+  useEffect(() => {
+    if (page === 1) {
+      fetchCharacters(search);
+    }
+    setPage(1);
+  }, [search]);
 
   const navigate = useNavigate();
 
@@ -71,6 +78,14 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
           }}
         >
           <div className="flex flex-col">
+            <Pagination
+              className="self-start mb-4 ml-4"
+              page={page}
+              totalPages={totalPages.current}
+              setPage={(page) => {
+                setPage(page);
+              }}
+            />
             <div
               className="flex flex-wrap gap-4 justify-around"
               data-testid="list"
@@ -92,7 +107,7 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
               ))}
             </div>
             <Pagination
-              className="self-start ml-4"
+              className="self-end mt-4 mr-4"
               page={page}
               totalPages={totalPages.current}
               setPage={(page) => {
