@@ -4,11 +4,15 @@ export const split = (el: object | string | number) => {
   } else if (Array.isArray(el)) {
     return el.join(', ');
   } else {
-    return Object.entries(el).map(([key, value]) => (
-      <li key={key} className="">
-        <span className="font-bold">{key}: </span>
-        <span>{split(value)}</span>
-      </li>
-    ));
+    return (
+      <ul className="list-disc list-inside ms-4">
+        {Object.entries(el).map(([key, value]) => (
+          <li key={key} className="">
+            <span className="font-bold">{key}: </span>
+            <span>{split(value)}</span>
+          </li>
+        ))}
+      </ul>
+    );
   }
 };

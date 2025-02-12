@@ -23,7 +23,7 @@ const CharactersDetails: FC<{ characterPromise: Promise<Character> }> = ({
       )}
     >
       <p className="text-center font-bold text-lg ">{character.name}</p>
-      <ul className="list-disc list-inside ms-4">{split(character)}</ul>
+      {split(character)}
     </div>
   );
 };
