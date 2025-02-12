@@ -8,6 +8,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         src={character.image}
         alt={character.name}
         className="w-24 h-24 rounded-full mb-4"
+        loading="lazy"
       />
       <h2 className="text-xl font-bold mb-2">{character.name}</h2>
       <p className="text-gray-600 mb-1">

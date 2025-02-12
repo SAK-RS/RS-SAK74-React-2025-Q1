@@ -97,8 +97,8 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
                     pathname: `details/${character.id}`,
                     search: searchParams.toString(),
                   }}
-                  onClick={() => {
-                    // ev.stopPropagation();
+                  onClick={(ev) => {
+                    ev.stopPropagation();
                   }}
                   data-testid="card"
                 >
