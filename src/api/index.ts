@@ -3,7 +3,7 @@ import { CharacterResponse } from './types';
 import { axiosInstance } from './setup';
 import { Character } from 'types';
 
-type SearchType = {
+export type SearchType = {
   name?: string;
   status?: string;
   species?: string;
