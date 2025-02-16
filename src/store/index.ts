@@ -1,9 +1,10 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { charactersApi } from './apiSlice';
+import { heroes } from './heroesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectedCharacters } from './selectedHeroesSlice';
 
-const reducer = combineReducers({
-  [charactersApi.reducerPath]: charactersApi.reducer,
-});
+const reducer = combineSlices(charactersApi, heroes, selectedCharacters);
 
 export const store = configureStore({
   reducer,
@@ -11,3 +12,9 @@ export const store = configureStore({
     return getDefaultMiddleware().concat(charactersApi.middleware);
   },
 });
+
+export type TypedState = ReturnType<typeof store.getState>;
+
+export const useStateSelector = useSelector.withTypes<TypedState>();
+
+export const useTypedDispatch = useDispatch.withTypes<typeof store.dispatch>();

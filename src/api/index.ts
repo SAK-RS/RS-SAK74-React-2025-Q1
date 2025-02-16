@@ -11,6 +11,8 @@ export type SearchType = {
   gender?: string;
 };
 
+export type ErrorResponse = { error: string };
+
 export async function getCharacters(
   params?: SearchType & { page?: number }
 ): Promise<CharacterResponse> {
@@ -28,10 +30,12 @@ export async function getCharacters(
   } catch (err) {
     console.error(err);
     let message = 'An error occurred while fetching characters';
+    let status: number | undefined;
     if (err instanceof AxiosError && err.response) {
       message = err.response.data.error;
+      status = err.status;
     }
-    return Promise.reject(message);
+    return Promise.reject({ message, status });
   }
 }
 

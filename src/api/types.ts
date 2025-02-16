@@ -4,8 +4,8 @@ export type CharacterResponse = {
   info: {
     count: number;
     pages: number;
-    next: string;
-    prev: string;
+    next: string | null;
+    prev: string | null;
   };
   results: Character[];
 };

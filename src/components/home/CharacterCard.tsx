@@ -1,9 +1,29 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { Link, useSearchParams } from 'react-router';
+import { useStateSelector, useTypedDispatch } from 'store';
+import {
+  addToSelected,
+  removeFromSelected,
+  selectSelectedCharactersIds,
+} from 'store/selectedHeroesSlice';
 import { Character } from 'types';
+import { cn } from 'utils/cn';
 
 const CharacterCard: FC<{ character: Character }> = ({ character }) => {
+  const dispatch = useTypedDispatch();
+  const selectedIds = useStateSelector(selectSelectedCharactersIds);
+  const [isSelected, setIsSelected] = useState(() =>
+    selectedIds.includes(character.id)
+  );
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {}, [selectedIds]);
   return (
-    <div className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100">
+    <div
+      className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100"
+      data-testid="card"
+    >
       <img
         src={character.image}
         alt={character.name}
@@ -23,6 +43,39 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
       <p className="text-gray-600">
         <strong>Gender:</strong> {character.gender}
       </p>
+      <div className="flex justify-between w-full ">
+        <Link
+          className="underline text-blue-400 italic"
+          to={{
+            pathname: `details/${character.id}`,
+            search: searchParams.toString(),
+          }}
+        >
+          View details
+        </Link>
+        <div title={isSelected ? 'Unselect' : 'Select'}>
+          <svg
+            className={cn(
+              'size-6 stroke-gray-700 cursor-pointer',
+              `fill-${isSelected ? 'amber-300' : 'none'}`
+            )}
+            onClick={() => {
+              console.log('click');
+
+              dispatch(
+                !isSelected
+                  ? addToSelected(character)
+                  : removeFromSelected(character.id)
+              );
+              setIsSelected((prev) => !prev);
+            }}
+            xmlns="http://www.w3.org/2000/svg"
+            strokeLinejoin="round"
+          >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21 12 17.77 5.82 21 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 };

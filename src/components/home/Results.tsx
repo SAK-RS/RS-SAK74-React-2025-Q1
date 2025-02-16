@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
 import {
-  Link,
   Outlet,
   useLocation,
   useNavigate,
@@ -12,14 +11,21 @@ import {
 import { useGetCharactersQuery } from 'store/apiSlice';
 
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { useStateSelector } from 'store';
+import {
+  selectAllCharacters,
+  selectCharactersEntities,
+} from 'store/heroesSlice';
+import { selectAllSelectedCharacters } from 'store/selectedHeroesSlice';
+import { ErrorResponse } from 'api';
 
 interface ResultsProps {
   search: string;
 }
 
-const Results: React.FC<ResultsProps> = ({ search }) => {
-  const [page, setPage] = React.useState(1);
-  const totalPages = useRef(1);
+const Results: FC<ResultsProps> = ({ search }) => {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -31,7 +37,8 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      totalPages.current = data.info.pages;
+      // totalPages.current = data.info.pages;
+      setTotalPages(data.info.pages);
     }
   }, [data, isSuccess]);
 
@@ -53,6 +60,15 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
     navigate({ pathname: '/search', search: searchParams.toString() });
   };
 
+  // TODO: remove next lines:
+  const stateCharacters = useStateSelector(selectAllCharacters);
+  const stateEntities = useStateSelector(selectCharactersEntities);
+  const selected = useStateSelector(selectAllSelectedCharacters);
+  useEffect(() => {
+    console.log({ stateCharacters, stateEntities, selected });
+  }, [stateCharacters, selected]);
+  //
+
   if (isError) {
     let message: string;
     console.log(error);
@@ -61,7 +77,8 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
         message = error.message;
         break;
       case isFetchBaseQueryError(error): {
-        message = error.status + ' ' + errorData(error);
+        const data = isPredefinedError(error.data) ? error.data.error : '';
+        message = error.status + ' ' + data;
         break;
       }
       default:
@@ -89,7 +106,7 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
               <Pagination
                 className="self-start mb-4 ml-4"
                 page={page}
-                totalPages={totalPages.current}
+                totalPages={totalPages}
                 setPage={(page) => {
                   setPage(page);
                 }}
@@ -99,25 +116,13 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
                 data-testid="list"
               >
                 {data.results.map((character) => (
-                  <Link
-                    key={character.id}
-                    to={{
-                      pathname: `details/${character.id}`,
-                      search: searchParams.toString(),
-                    }}
-                    onClick={(ev) => {
-                      ev.stopPropagation();
-                    }}
-                    data-testid="card"
-                  >
-                    <CharacterCard character={character} />
-                  </Link>
+                  <CharacterCard key={character.id} character={character} />
                 ))}
               </div>
               <Pagination
                 className="self-end mt-4 mr-4"
                 page={page}
-                totalPages={totalPages.current}
+                totalPages={totalPages}
                 setPage={(page) => {
                   setPage(page);
                 }}
@@ -138,6 +143,9 @@ export default Results;
 function isFetchBaseQueryError(err: unknown): err is FetchBaseQueryError {
   return Boolean((err as FetchBaseQueryError).status);
 }
-function errorData(err: FetchBaseQueryError): string {
-  return err.data ? (err.data as string) : '';
+// function errorData(err: FetchBaseQueryError): string {
+//   return err.data ? (err.data as string) : '';
+// }
+function isPredefinedError(data: unknown): data is ErrorResponse {
+  return typeof data === 'object' && data !== null && 'error' in data;
 }

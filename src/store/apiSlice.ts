@@ -1,32 +1,49 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  BaseQueryFn,
+  createApi,
+  EndpointBuilder,
+  FetchArgs,
+  fetchBaseQuery,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+} from '@reduxjs/toolkit/query/react';
 import { API_URL } from 'api/setup';
 import { CharacterResponse } from 'api/types';
-import { SearchType } from 'api';
+import { type SearchType } from 'api';
+
+import { setAll } from './heroesSlice';
 
 export const charactersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
   }),
-  endpoints: (builder) => ({
+  endpoints: (
+    builder: EndpointBuilder<
+      BaseQueryFn<
+        FetchArgs | string,
+        CharacterResponse,
+        FetchBaseQueryError,
+        object,
+        FetchBaseQueryMeta
+      >,
+      never,
+      'api'
+    >
+  ) => ({
     getCharacters: builder.query<
       CharacterResponse,
       SearchType & { page?: number }
     >({
-      query(arg) {
-        return {
+      async queryFn(arg, api, _extraOptions, baseQuery) {
+        const baseResponse = await baseQuery({
           url: '/character',
-          params: {
-            name: arg?.name,
-            status: arg?.status,
-            species: arg?.species,
-            type: arg?.type,
-            page: arg?.page,
-          },
-        };
-      },
-      transformErrorResponse({ status, data }) {
-        const customData = data ? (data as { error: string }).error : undefined;
-        return { status, data: customData };
+          params: arg,
+        });
+        console.log('baseResponse: ', baseResponse);
+        if (baseResponse.data) {
+          api.dispatch(setAll(baseResponse.data.results));
+        }
+        return baseResponse;
       },
     }),
   }),
