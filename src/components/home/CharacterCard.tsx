@@ -53,22 +53,21 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         >
           View details
         </Link>
-        <div title={isSelected ? 'Unselect' : 'Select'}>
+        <div
+          title={isSelected ? 'Unselect' : 'Select'}
+          onClick={() => {
+            dispatch(
+              !isSelected
+                ? addToSelected(character)
+                : removeFromSelected(character.id)
+            );
+            setIsSelected((prev) => !prev);
+          }}
+        >
           <svg
-            className={cn(
-              'size-6 stroke-gray-700 cursor-pointer',
-              `fill-${isSelected ? 'amber-300' : 'none'}`
-            )}
-            onClick={() => {
-              console.log('click');
-
-              dispatch(
-                !isSelected
-                  ? addToSelected(character)
-                  : removeFromSelected(character.id)
-              );
-              setIsSelected((prev) => !prev);
-            }}
+            className={cn('size-6 stroke-gray-700 cursor-pointer fill-none', {
+              'fill-amber-300': isSelected,
+            })}
             xmlns="http://www.w3.org/2000/svg"
             strokeLinejoin="round"
           >

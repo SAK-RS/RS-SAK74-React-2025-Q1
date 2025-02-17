@@ -1,52 +1,47 @@
-import {
-  BaseQueryFn,
-  createApi,
-  EndpointBuilder,
-  FetchArgs,
-  fetchBaseQuery,
-  FetchBaseQueryError,
-  FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_URL } from 'api/setup';
 import { CharacterResponse } from 'api/types';
-import { type SearchType } from 'api';
-
-import { setAll } from './heroesSlice';
+import { SearchType } from 'api';
 
 export const charactersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
   }),
-  endpoints: (
-    builder: EndpointBuilder<
-      BaseQueryFn<
-        FetchArgs | string,
-        CharacterResponse,
-        FetchBaseQueryError,
-        object,
-        FetchBaseQueryMeta
-      >,
-      never,
-      'api'
-    >
-  ) => ({
+  endpoints: (builder) => ({
     getCharacters: builder.query<
       CharacterResponse,
       SearchType & { page?: number }
     >({
-      async queryFn(arg, api, _extraOptions, baseQuery) {
-        const baseResponse = await baseQuery({
+      query(arg) {
+        return {
           url: '/character',
-          params: arg,
-        });
-        console.log('baseResponse: ', baseResponse);
-        if (baseResponse.data) {
-          api.dispatch(setAll(baseResponse.data.results));
-        }
-        return baseResponse;
+          params: {
+            name: arg?.name,
+            status: arg?.status,
+            species: arg?.species,
+            type: arg?.type,
+            page: arg?.page,
+          },
+        };
+      },
+      transformErrorResponse({ status, data }) {
+        const customData = isPredefinedError(data)
+          ? data.error
+          : isString(data)
+            ? data
+            : '';
+        return { status, data: customData };
       },
     }),
   }),
 });
 
 export const { useGetCharactersQuery } = charactersApi;
+
+function isPredefinedError(err: unknown): err is { error: string } {
+  return typeof err === 'object' && err !== null && 'error' in err;
+}
+
+function isString(data: unknown): data is string {
+  return typeof data === 'string';
+}

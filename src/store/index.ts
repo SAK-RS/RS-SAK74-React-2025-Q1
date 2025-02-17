@@ -1,10 +1,9 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { charactersApi } from './apiSlice';
-import { heroes } from './heroesSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectedCharacters } from './selectedHeroesSlice';
 
-const reducer = combineSlices(charactersApi, heroes, selectedCharacters);
+const reducer = combineSlices(charactersApi, selectedCharacters);
 
 export const store = configureStore({
   reducer,
