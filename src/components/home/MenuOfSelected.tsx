@@ -1,14 +1,27 @@
-import { MouseEventHandler, type FC } from 'react';
-import { useTypedDispatch } from 'store';
+import { MouseEventHandler, useRef, type FC } from 'react';
+import { useStateSelector, useTypedDispatch } from 'store';
 import {
-  // selectAllSelectedCharacters,
+  selectAllSelectedCharacters,
   unselectAll,
 } from 'store/selectedHeroesSlice';
+import generateCSV_URL from 'utils/csvContent';
 
 const MenuSelected: FC<{ quantity: number }> = ({ quantity }) => {
-  // const allSelected = useStateSelector(selectAllSelectedCharacters);
+  const allSelected = useStateSelector(selectAllSelectedCharacters);
   const isMoreThan_1 = quantity > 1;
   const dispatch = useTypedDispatch();
+
+  const handleDownload = () => {
+    if (!linkRef.current) {
+      throw Error('no ref mounted');
+    }
+    const link = linkRef.current;
+    const url = generateCSV_URL(allSelected);
+    link.download = `${quantity}_character${isMoreThan_1 ? 's' : ''}`;
+    link.href = url;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
   const handleClick: MouseEventHandler<HTMLButtonElement> = ({
     currentTarget: { name },
   }) => {
@@ -16,12 +29,14 @@ const MenuSelected: FC<{ quantity: number }> = ({ quantity }) => {
       case 'unselect':
         dispatch(unselectAll());
         break;
-      case 'download' /*TODO: downloadSCV(allSelected) */:
+      case 'download':
+        handleDownload();
         break;
       default:
         throw Error('unhandled click...');
     }
   };
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
   return (
     <div className="fixed left-2 bottom-2 w-[35vw] h-20 bg-green-500 rounded-md animate-fade">
@@ -44,6 +59,9 @@ const MenuSelected: FC<{ quantity: number }> = ({ quantity }) => {
         >
           Download
         </button>
+        <a href={''} download={'test.csv'} ref={linkRef} className="hidden">
+          test
+        </a>
       </div>
     </div>
   );

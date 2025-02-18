@@ -1,7 +1,7 @@
 import { FC, use, useEffect, useState } from 'react';
 import { Character } from 'types';
 import { cn } from 'utils/cn';
-import { split } from 'utils/Split';
+import { split } from 'utils/split';
 
 const CharactersDetails: FC<{ characterPromise: Promise<Character> }> = ({
   characterPromise,

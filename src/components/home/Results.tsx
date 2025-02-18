@@ -3,19 +3,15 @@ import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
 import {
+  Link,
   Outlet,
   useLocation,
   useNavigate,
   useSearchParams,
 } from 'react-router';
 import { useGetCharactersQuery } from 'store/apiSlice';
-
 import { useStateSelector } from 'store';
-
-import {
-  selectAllSelectedCharacters,
-  selectedAmount,
-} from 'store/selectedHeroesSlice';
+import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
 import MenuSelected from './MenuOfSelected';
 
@@ -59,13 +55,6 @@ const Results: FC<ResultsProps> = ({ search }) => {
     navigate({ pathname: '/search', search: searchParams.toString() });
   };
 
-  // TODO: remove next lines:
-  const selected = useStateSelector(selectAllSelectedCharacters);
-  useEffect(() => {
-    console.log({ selected });
-  }, [selected]);
-  //
-
   const selectedLenght = useStateSelector(selectedAmount);
 
   return (
@@ -81,14 +70,18 @@ const Results: FC<ResultsProps> = ({ search }) => {
           }}
         >
           <div className="flex flex-col">
-            <Pagination
-              className="self-start mb-4 ml-4"
-              page={page}
-              totalPages={totalPages}
-              setPage={(page) => {
-                setPage(page);
-              }}
-            />
+            <div className="flex justify-between">
+              <Pagination
+                className="self-start mb-4 ml-4"
+                page={page}
+                totalPages={totalPages}
+                setPage={(page) => {
+                  setPage(page);
+                }}
+              />
+              <Link to="../example">Go to another page</Link>
+            </div>
+
             <div
               className="flex flex-wrap gap-4 justify-around"
               data-testid="list"
