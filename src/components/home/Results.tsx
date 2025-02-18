@@ -12,8 +12,12 @@ import { useGetCharactersQuery } from 'store/apiSlice';
 
 import { useStateSelector } from 'store';
 
-import { selectAllSelectedCharacters } from 'store/selectedHeroesSlice';
+import {
+  selectAllSelectedCharacters,
+  selectedAmount,
+} from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
+import MenuSelected from './MenuOfSelected';
 
 interface ResultsProps {
   search: string;
@@ -62,6 +66,8 @@ const Results: FC<ResultsProps> = ({ search }) => {
   }, [selected]);
   //
 
+  const selectedLenght = useStateSelector(selectedAmount);
+
   return (
     <div className="my-6">
       {isError && <SearchError error={error} />}
@@ -101,6 +107,9 @@ const Results: FC<ResultsProps> = ({ search }) => {
             />
           </div>
           <Outlet context={{ closeDetails }} />
+          {Boolean(selectedLenght) && (
+            <MenuSelected quantity={selectedLenght} />
+          )}
         </div>
       )}
 

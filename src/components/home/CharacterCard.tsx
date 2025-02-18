@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { type FC, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
@@ -12,9 +12,8 @@ import { cn } from 'utils/cn';
 const CharacterCard: FC<{ character: Character }> = ({ character }) => {
   const dispatch = useTypedDispatch();
   const selectedIds = useStateSelector(selectSelectedCharactersIds);
-  const [isSelected, setIsSelected] = useState(() =>
-    selectedIds.includes(character.id)
-  );
+
+  const isSelected = selectedIds.includes(character.id);
 
   const [searchParams] = useSearchParams();
 
@@ -61,7 +60,6 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
                 ? addToSelected(character)
                 : removeFromSelected(character.id)
             );
-            setIsSelected((prev) => !prev);
           }}
         >
           <svg
