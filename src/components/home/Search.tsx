@@ -30,11 +30,11 @@ const Search: FC<SearchProps> = ({ onSubmit, value }) => {
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="space-x-4">
         <input
           type="text"
           placeholder="Search"
-          className=""
+          className="dark:bg-gray-600"
           value={inputValue}
           onChange={handleChange}
         />
