@@ -1,13 +1,9 @@
-import { FC, use, useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { Character } from 'types';
 import { cn } from 'utils/cn';
 import { split } from 'utils/split';
 
-const CharactersDetails: FC<{ characterPromise: Promise<Character> }> = ({
-  characterPromise,
-}) => {
-  const character = use(characterPromise);
-
+const CharactersDetails: FC<{ character: Character }> = ({ character }) => {
   const [isOpened, setIsOpened] = useState(false);
   useEffect(() => {
     setIsOpened(true);

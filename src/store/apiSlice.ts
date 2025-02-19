@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL } from 'api/setup';
-import { CharacterResponse } from 'api/types';
-import { SearchType } from 'api';
+import { API_URL, SearchType } from 'api';
+import { CharacterResponse } from 'api';
+import { Character } from 'types';
 
 export const charactersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
+    timeout: 3000,
   }),
   endpoints: (builder) => ({
     getCharacters: builder.query<
@@ -33,10 +34,16 @@ export const charactersApi = createApi({
         return { status, data: customData };
       },
     }),
+    getCharacterById: builder.query<Character, string>({
+      query(id) {
+        return `/character/${id}`;
+      },
+    }),
   }),
 });
 
-export const { useGetCharactersQuery } = charactersApi;
+export const { useGetCharactersQuery, useGetCharacterByIdQuery } =
+  charactersApi;
 
 function isPredefinedError(err: unknown): err is { error: string } {
   return typeof err === 'object' && err !== null && 'error' in err;

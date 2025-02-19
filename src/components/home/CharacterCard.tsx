@@ -44,10 +44,13 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
       </p>
       <div className="flex justify-between w-full ">
         <Link
-          className="underline text-blue-400 italic"
+          className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
           to={{
             pathname: `details/${character.id}`,
             search: searchParams.toString(),
+          }}
+          onClick={(ev) => {
+            ev.stopPropagation();
           }}
         >
           View details
@@ -63,9 +66,12 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           }}
         >
           <svg
-            className={cn('size-6 stroke-gray-700 cursor-pointer fill-none', {
-              'fill-amber-300': isSelected,
-            })}
+            className={cn(
+              'size-6 stroke-gray-700 cursor-pointer fill-none hover:scale-105',
+              {
+                'fill-amber-300': isSelected,
+              }
+            )}
             xmlns="http://www.w3.org/2000/svg"
             strokeLinejoin="round"
           >

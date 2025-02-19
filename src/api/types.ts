@@ -9,3 +9,11 @@ export type CharacterResponse = {
   };
   results: Character[];
 };
+
+export type SearchType = {
+  name?: string;
+  status?: string;
+  species?: string;
+  type?: string;
+  gender?: string;
+};

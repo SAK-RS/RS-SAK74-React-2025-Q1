@@ -79,7 +79,14 @@ const Results: FC<ResultsProps> = ({ search }) => {
                   setPage(page);
                 }}
               />
-              <Link to="../example">Go to another page</Link>
+              <Link
+                to="../example"
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                }}
+              >
+                Go to another page
+              </Link>
             </div>
 
             <div
