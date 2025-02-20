@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
@@ -6,7 +6,7 @@ import {
   removeFromSelected,
   selectSelectedCharactersIds,
 } from 'store/selectedHeroesSlice';
-import { Character } from 'types';
+import type { Character } from 'types';
 import { cn } from 'utils/cn';
 
 const CharacterCard: FC<{ character: Character }> = ({ character }) => {
@@ -17,7 +17,6 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
 
   const [searchParams] = useSearchParams();
 
-  useEffect(() => {}, [selectedIds]);
   return (
     <div
       className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100"
@@ -55,7 +54,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         >
           View details
         </Link>
-        <div
+        <button
           title={isSelected ? 'Unselect' : 'Select'}
           onClick={() => {
             dispatch(
@@ -77,7 +76,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           >
             <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21 12 17.77 5.82 21 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
-        </div>
+        </button>
       </div>
     </div>
   );

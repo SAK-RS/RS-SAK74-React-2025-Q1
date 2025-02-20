@@ -1,20 +1,31 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import Results from 'components/home/Results';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router';
+import { store } from 'store';
+import * as apiSlice from 'store/apiSlice';
+import { results as mockedResults } from './mock/data.json';
+import userEvent from '@testing-library/user-event';
 
-describe('Results', () => {
+const WrappedResults = () => (
+  <Provider store={store}>
+    <MemoryRouter>
+      <Results search="" />
+    </MemoryRouter>
+  </Provider>
+);
+
+const user = userEvent.setup();
+
+describe('Results Component', () => {
   beforeEach(() => {
-    render(
-      <MemoryRouter>
-        <Results search="" />
-      </MemoryRouter>
-    );
+    render(<WrappedResults />);
   });
   afterEach(() => {
     cleanup();
   });
 
-  test('Spinner should be rendering', () => {
+  it('Should show loading spinner initially', () => {
     const spiner = screen.getByText('loading');
     expect(spiner).toBeInTheDocument();
   });
@@ -24,8 +35,49 @@ describe('Results', () => {
     expect(list).toBeInTheDocument();
   });
 
-  it('Card amount should be 7 (max mocked results)', async () => {
+  it('Card amount should be = mocked results lenght', async () => {
     const cards = await screen.findAllByTestId('card');
-    expect(cards.length).toBe(7);
+    expect(cards.length).toBe(mockedResults.length);
+  });
+
+  it('Should show selected heroes menu when there are selections', async () => {
+    let selectBtns: HTMLButtonElement[];
+
+    selectBtns = screen.getAllByRole('button', { name: 'Select' });
+    expect(selectBtns).toHaveLength(mockedResults.length);
+
+    await user.click(selectBtns[0]);
+    expect(screen.getByText('1 item is selected')).toBeInTheDocument();
+    expect(selectBtns[0]).toHaveAccessibleName('Unselect');
+
+    await user.click(selectBtns[1]);
+    expect(screen.getByText('2 items are selected')).toBeInTheDocument();
+
+    selectBtns = screen.getAllByRole('button', { name: 'Select' });
+    expect(selectBtns).toHaveLength(mockedResults.length - 2);
+  });
+
+  it('Should hide selected menu if no selected heroes', async () => {
+    const unselectBtn = screen.getByText('Unselect all');
+    expect(unselectBtn).toBeInTheDocument();
+    await user.click(unselectBtn);
+    expect(unselectBtn).not.toBeInTheDocument();
+  });
+});
+
+describe('With mocked Query', () => {
+  it('should show error message when API fails', () => {
+    vi.spyOn(apiSlice, 'useGetCharactersQuery').mockReturnValue({
+      isLoading: false,
+      isSuccess: false,
+      isError: true,
+      isFetching: false,
+      error: { status: 404, data: { error: 'Not found' } },
+      refetch: vi.fn(),
+    });
+
+    render(<WrappedResults />);
+
+    expect(screen.getByTestId('error-message')).toBeInTheDocument();
   });
 });
