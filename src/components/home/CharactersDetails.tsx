@@ -8,6 +8,7 @@ const CharactersDetails: FC<{ character: Character }> = ({ character }) => {
   useEffect(() => {
     setIsOpened(true);
   }, []);
+  const { name, ...restProps } = character;
 
   return (
     <div
@@ -18,8 +19,8 @@ const CharactersDetails: FC<{ character: Character }> = ({ character }) => {
         }
       )}
     >
-      <p className="text-center font-bold text-lg ">{character.name}</p>
-      {split(character)}
+      <p className="text-center font-bold text-lg ">{name}</p>
+      {split(restProps)}
     </div>
   );
 };
