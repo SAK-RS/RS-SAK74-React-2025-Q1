@@ -3,12 +3,21 @@ import { describe, expect, it } from 'vitest';
 import CharacterCard from 'components/home/CharacterCard';
 import { Character } from 'types';
 import { results } from 'tests/mock/data.json';
+import { Provider } from 'react-redux';
+import { store } from 'store';
+import { MemoryRouter } from 'react-router';
 
 describe('CharacterCard', () => {
   const mockCharacter: Character = results[Math.round(Math.random() * 6)];
 
   beforeEach(() => {
-    render(<CharacterCard character={mockCharacter} />);
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <CharacterCard character={mockCharacter} />
+        </MemoryRouter>
+      </Provider>
+    );
   });
 
   it('renders character image with correct attributes', () => {
