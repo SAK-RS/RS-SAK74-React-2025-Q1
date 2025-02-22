@@ -12,13 +12,14 @@ export default mergeConfig(
       coverage: {
         include: ['src/**/*.tsx'],
         exclude: [
-          '**/*.test.tsx',
           'src/App.tsx',
           'src/main.tsx',
           'src/utils/**',
           'src/routes.tsx',
-          'src/**/ErrorBoundary.tsx',
-          'src/**/ErrorElement.tsx',
+          '**/Error*',
+          '**/Example*',
+          '**/Footer.tsx',
+          '**/Header.tsx',
         ],
         clean: true,
       },

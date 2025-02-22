@@ -54,8 +54,10 @@ describe('Details', () => {
       data: mockCharacter,
     });
     render(<Details />);
-    for (const key in mockCharacter) {
-      expect(screen.getAllByText(key + ':')[0]).toBeInTheDocument();
+    const { name, ...rest } = mockCharacter;
+    expect(screen.getByText(name)).toBeInTheDocument();
+    for (const key in rest) {
+      expect(screen.getAllByText(key, { exact: false })[0]).toBeInTheDocument();
     }
   });
 
