@@ -9,7 +9,7 @@ import {
   type PropsWithChildren,
 } from 'react';
 
-type ThemeContextType = {
+export type ThemeContextType = {
   isDark: boolean;
   setDark: Dispatch<SetStateAction<boolean>>;
 };

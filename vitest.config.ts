@@ -19,7 +19,6 @@ export default mergeConfig(
           '**/Error*',
           '**/Example*',
           '**/Footer.tsx',
-          '**/Header.tsx',
         ],
         clean: true,
       },
