@@ -19,7 +19,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
 
   return (
     <div
-      className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100"
+      className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100 dark:bg-gray-600"
       data-testid="card"
     >
       <img
@@ -29,18 +29,20 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         loading="lazy"
       />
       <h2 className="text-xl font-bold mb-2">{character.name}</h2>
-      <p className="text-gray-600 mb-1">
-        <strong>Status:</strong> {character.status}
-      </p>
-      <p className="text-gray-600 mb-1">
-        <strong>Species:</strong> {character.species}
-      </p>
-      <p className="text-gray-600 mb-1">
-        <strong>Type:</strong> {character.type}
-      </p>
-      <p className="text-gray-600">
-        <strong>Gender:</strong> {character.gender}
-      </p>
+      <div className="space-y-1 text-gray-600 dark:text-gray-300">
+        <p className="">
+          <strong>Status:</strong> {character.status}
+        </p>
+        <p className="">
+          <strong>Species:</strong> {character.species}
+        </p>
+        <p className="">
+          <strong>Type:</strong> {character.type}
+        </p>
+        <p className="">
+          <strong>Gender:</strong> {character.gender}
+        </p>
+      </div>
       <div className="flex justify-between w-full ">
         <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
@@ -66,7 +68,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         >
           <svg
             className={cn(
-              'size-6 stroke-gray-700 cursor-pointer fill-none hover:scale-105',
+              'size-6 stroke-gray-700 dark:stroke-gray-400 cursor-pointer fill-none hover:scale-105',
               {
                 'fill-amber-300': isSelected,
               }

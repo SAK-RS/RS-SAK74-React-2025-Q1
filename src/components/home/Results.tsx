@@ -84,6 +84,7 @@ const Results: FC<ResultsProps> = ({ search }) => {
                 onClick={(ev) => {
                   ev.stopPropagation();
                 }}
+                className="mr-4"
               >
                 Go to another page
               </Link>
