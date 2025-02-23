@@ -1,1 +1,1 @@
-export const BASE_URL = '/RS-School/React/hooks-and-routing/';
+export const BASE_URL = '/RS-School/React/app-state-management/';
