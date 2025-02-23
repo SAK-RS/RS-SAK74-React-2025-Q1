@@ -1,27 +1,27 @@
-import { defineConfig, mergeConfig } from 'vitest/config';
-import viteConfig from './vite.config';
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react-swc';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-export default mergeConfig(
-  viteConfig,
-  defineConfig({
-    test: {
-      globals: true,
-      include: ['src/**/*.test.tsx'],
-      environment: 'jsdom',
-      setupFiles: './src/tests/setup.ts',
-      coverage: {
-        include: ['src/**/*.tsx'],
-        exclude: [
-          'src/App.tsx',
-          'src/main.tsx',
-          'src/utils/**',
-          'src/routes.tsx',
-          '**/Error*',
-          '**/Example*',
-          '**/Footer.tsx',
-        ],
-        clean: true,
-      },
+export default defineConfig({
+  plugins: [react(), tsconfigPaths()],
+  test: {
+    globals: true,
+    include: ['src/**/*.test.tsx'],
+    environment: 'jsdom',
+    setupFiles: './src/tests/setup.ts',
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.tsx'],
+      exclude: [
+        'src/App.tsx',
+        'src/main.tsx',
+        'src/utils/**',
+        'src/routes.tsx',
+        '**/Error*',
+        '**/Example*',
+        '**/Footer.tsx',
+      ],
+      clean: true,
     },
-  })
-);
+  },
+});

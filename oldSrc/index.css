@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+
+@layer base {
+  h1 {
+    font-size: var(--text-4xl);
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: blue;
+  --animate-fade: fade 1s ease-in-out forwards;
+}
+
+@keyframes zoom {
+  from {
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
+}
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
