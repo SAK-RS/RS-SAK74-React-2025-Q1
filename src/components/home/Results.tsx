@@ -14,6 +14,7 @@ import { useStateSelector } from 'store';
 import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
 import MenuSelected from './MenuOfSelected';
+import Modal from 'components/Modal';
 
 interface ResultsProps {
   search: string;
@@ -60,7 +61,7 @@ const Results: FC<ResultsProps> = ({ search }) => {
   return (
     <div className="my-6">
       {isError && <SearchError error={error} />}
-      {isSuccess && !isLoading && !isFetching && (
+      {isSuccess && (
         <div
           className="flex justify-between"
           onClick={() => {
@@ -114,7 +115,11 @@ const Results: FC<ResultsProps> = ({ search }) => {
         </div>
       )}
 
-      <Spinner loading={isLoading || isFetching} size="large" />
+      {(isLoading || isFetching) && (
+        <Modal>
+          <Spinner size="large" />
+        </Modal>
+      )}
     </div>
   );
 };
