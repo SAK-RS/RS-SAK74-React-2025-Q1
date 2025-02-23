@@ -26,7 +26,7 @@ const Home = () => {
   }, [isError]);
 
   return (
-    <div className="container mx-auto flex flex-col px-2">
+    <div className="flex flex-col">
       <Search value={search} onSubmit={onSubmit} />
       <Results search={search} />
       <Button

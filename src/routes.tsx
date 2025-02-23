@@ -1,5 +1,6 @@
 import ErrorElement from 'components/ErrorElement';
 import { Details, loader } from 'pages/Details';
+import ExamplePage from 'pages/ExamplePage';
 import Home from 'pages/Home';
 import { Navigate, type RouteObject } from 'react-router';
 
@@ -21,6 +22,10 @@ export const routes: RouteObject[] = [
             element: <Details />,
           },
         ],
+      },
+      {
+        path: 'example',
+        element: <ExamplePage />,
       },
     ],
   },

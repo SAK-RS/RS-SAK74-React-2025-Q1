@@ -7,8 +7,27 @@
   }
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-primary: blue;
+  --animate-fade: fade 1s ease-in-out forwards;
+}
+
+@keyframes zoom {
+  from {
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 0.9;
+    transform: translateY(0);
+  }
 }
 
 :root {

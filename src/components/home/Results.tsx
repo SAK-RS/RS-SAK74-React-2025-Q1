@@ -1,6 +1,4 @@
-import { getCharacters } from 'api';
-import React, { useEffect, useRef } from 'react';
-import { Character } from 'types';
+import { type FC, useEffect, useState } from 'react';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
@@ -11,51 +9,43 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router';
+import { useGetCharactersQuery } from 'store/apiSlice';
+import { useStateSelector } from 'store';
+import { selectedAmount } from 'store/selectedHeroesSlice';
+import SearchError from './SearchError';
+import MenuSelected from './MenuOfSelected';
+import Modal from 'components/Modal';
 
 interface ResultsProps {
   search: string;
 }
 
-const Results: React.FC<ResultsProps> = ({ search }) => {
-  const [characters, setCharacters] = React.useState<Character[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState<string>();
-  const [page, setPage] = React.useState(1);
-  const totalPages = useRef(1);
-
-  const fetchCharacters = async (search: string, page?: number) => {
-    setCharacters([]);
-    setIsLoading(true);
-    setError(undefined);
-    try {
-      const response = await getCharacters({ name: search, page });
-      const {
-        results: characters,
-        info: { pages },
-      } = response;
-      setCharacters(characters);
-      totalPages.current = pages;
-    } catch (err) {
-      if (typeof err === 'string') {
-        setError(err);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+const Results: FC<ResultsProps> = ({ search }) => {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const { data, isError, error, isLoading, isSuccess, isFetching } =
+    useGetCharactersQuery({
+      page,
+      name: search,
+    });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTotalPages(data.info.pages);
+    }
+  }, [data, isSuccess]);
+
   useEffect(() => {
     setSearchParams({ searchPage: page.toString() });
-    fetchCharacters(search, page);
   }, [page]);
 
   useEffect(() => {
-    if (page === 1) {
-      fetchCharacters(search);
+    if (page !== 1) {
+      setPage(1);
     }
-    setPage(1);
   }, [search]);
 
   const navigate = useNavigate();
@@ -66,9 +56,12 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
     navigate({ pathname: '/search', search: searchParams.toString() });
   };
 
+  const selectedLenght = useStateSelector(selectedAmount);
+
   return (
     <div className="my-6">
-      {characters.length ? (
+      {isError && <SearchError error={error} />}
+      {isSuccess && (
         <div
           className="flex justify-between"
           onClick={() => {
@@ -78,52 +71,54 @@ const Results: React.FC<ResultsProps> = ({ search }) => {
           }}
         >
           <div className="flex flex-col">
-            <Pagination
-              className="self-start mb-4 ml-4"
-              page={page}
-              totalPages={totalPages.current}
-              setPage={(page) => {
-                setPage(page);
-              }}
-            />
+            <div className="flex justify-between">
+              <Pagination
+                className="self-start mb-4 ml-4"
+                page={page}
+                totalPages={totalPages}
+                setPage={(page) => {
+                  setPage(page);
+                }}
+              />
+              <Link
+                to="../example"
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                }}
+                className="mr-4"
+              >
+                Go to another page
+              </Link>
+            </div>
+
             <div
               className="flex flex-wrap gap-4 justify-around"
               data-testid="list"
             >
-              {characters.map((character) => (
-                <Link
-                  key={character.id}
-                  to={{
-                    pathname: `details/${character.id}`,
-                    search: searchParams.toString(),
-                  }}
-                  onClick={(ev) => {
-                    ev.stopPropagation();
-                  }}
-                  data-testid="card"
-                >
-                  <CharacterCard character={character} />
-                </Link>
+              {data.results.map((character) => (
+                <CharacterCard key={character.id} character={character} />
               ))}
             </div>
             <Pagination
               className="self-end mt-4 mr-4"
               page={page}
-              totalPages={totalPages.current}
+              totalPages={totalPages}
               setPage={(page) => {
                 setPage(page);
               }}
             />
           </div>
           <Outlet context={{ closeDetails }} />
+          {Boolean(selectedLenght) && (
+            <MenuSelected quantity={selectedLenght} />
+          )}
         </div>
-      ) : null}
+      )}
 
-      <Spinner loading={isLoading} size="large" />
-      {error && (
-        <div className="text-red-500 text-2xl" data-testid="error-message">
-          {error}... 😥{' '}
-        </div>
+      {(isLoading || isFetching) && (
+        <Modal>
+          <Spinner size="large" />
+        </Modal>
       )}
     </div>
   );

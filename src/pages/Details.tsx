@@ -1,14 +1,13 @@
-import { getCharacterById } from 'api';
 import Button from 'components/Button';
 import DetailsPage from 'components/home/CharactersDetails';
 import Spinner from 'components/Spinner';
-import { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useLoaderData,
   useOutletContext,
   type LoaderFunction,
 } from 'react-router';
-import { Character } from 'types';
+import { useGetCharacterByIdQuery } from 'store/apiSlice';
 import { cn } from 'utils/cn';
 
 export const loader: LoaderFunction = async ({ params }) => {
@@ -16,18 +15,15 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!characterID) {
     throw new Error('Character ID is required');
   }
-  const character = getCharacterById(characterID);
-  return {
-    characterPromise: character,
-  };
+  return characterID;
 };
 
 export const Details = () => {
-  const { characterPromise } = useLoaderData<{
-    characterPromise: Promise<Character>;
-    character: Character;
-  }>();
+  const id = useLoaderData<string>();
   const [isOpened, setIsOpened] = useState(false);
+
+  const { data, isSuccess, isLoading, isFetching } =
+    useGetCharacterByIdQuery(id);
 
   const { closeDetails } = useOutletContext<{ closeDetails: () => void }>();
   useEffect(() => {
@@ -53,9 +49,8 @@ export const Details = () => {
         ❌
       </div>
       <p className="font-lg">Details:</p>
-      <Suspense fallback={<Spinner />}>
-        <DetailsPage characterPromise={characterPromise} />
-      </Suspense>
+      <Spinner loading={isLoading || isFetching} />
+      {isSuccess && <DetailsPage character={data} />}
       <Button onClick={closeDetails} size="small" className="my-2">
         Close
       </Button>

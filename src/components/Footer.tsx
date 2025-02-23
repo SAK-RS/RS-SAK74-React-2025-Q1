@@ -1,6 +1,17 @@
+import { cn } from 'utils/cn';
+import { useTheme } from './ThemeProvider';
+
 export default function Footer() {
+  const { isDark } = useTheme();
   return (
-    <footer className="border-t flex justify-between items-center py-1 px-4 bg-gray-200">
+    <footer
+      className={cn(
+        'border-t flex justify-between items-center py-1 px-4 bg-gray-200',
+        {
+          'bg-gray-600': isDark,
+        }
+      )}
+    >
       <img
         src="https://old.rs.school/images/rs_school.svg"
         alt="rs-logo"
