@@ -26,8 +26,8 @@ export default function ErrorPage({ statusCode }) {
   );
 }
 
-ErrorPage.getInitialProps = ({ err, res }: NextPageContext) => {
-  console.log({ err, res });
+ErrorPage.getInitialProps = ({ res }: NextPageContext) => {
+  // console.log({ err, res });
   const statusCode = res.statusCode;
   return { statusCode };
 };

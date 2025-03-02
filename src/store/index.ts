@@ -21,4 +21,4 @@ export const useStateSelector = useSelector.withTypes<TypedState>();
 export const useTypedDispatch =
   useDispatch.withTypes<ReturnType<typeof makeStore>['dispatch']>();
 
-export const wrapper = createWrapper(makeStore, { debug: true });
+export const wrapper = createWrapper(makeStore);

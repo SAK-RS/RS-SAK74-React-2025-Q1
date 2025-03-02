@@ -1,5 +1,7 @@
 import Button from 'components/Button';
+import { useRouter } from 'next/router';
 import {
+  useEffect,
   useState,
   type ChangeEventHandler,
   type FC,
@@ -8,18 +10,20 @@ import {
 
 export const LOCAL_STORAGE_KEY = '__search';
 
-interface SearchProps {
-  value: string;
-  onSubmit: (search: string) => void;
-}
+const Search: FC = () => {
+  const [inputValue, setInputValue] = useState('');
+  useEffect(() => {
+    setInputValue(window.localStorage.getItem(LOCAL_STORAGE_KEY) || '');
+  }, []);
 
-const Search: FC<SearchProps> = ({ onSubmit, value }) => {
-  const [inputValue, setInputValue] = useState(() => value);
+  const { push } = useRouter();
 
-  const handleSubmit: FormEventHandler = (ev) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (ev) => {
     ev.preventDefault();
     window.localStorage.setItem(LOCAL_STORAGE_KEY, inputValue);
-    onSubmit(inputValue);
+    push({
+      query: { search: inputValue, page: 1 },
+    });
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({
@@ -34,9 +38,10 @@ const Search: FC<SearchProps> = ({ onSubmit, value }) => {
         <input
           type="text"
           placeholder="Search"
-          className="dark:bg-gray-600"
+          className="dark:bg-gray-600 rounded-lg"
           value={inputValue}
           onChange={handleChange}
+          name="search"
         />
         <Button>Search</Button>
       </form>

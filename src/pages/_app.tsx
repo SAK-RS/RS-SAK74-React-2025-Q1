@@ -6,6 +6,7 @@ import RootLayout from 'components/RootLayout';
 import Footer from 'components/Footer';
 import { wrapper } from 'store';
 import { Provider } from 'react-redux';
+import ErrorBoundary from 'components/ErrorBoundary';
 
 type AppOwnProps = {
   example: string;
@@ -17,22 +18,18 @@ function App({ Component, ...rest }: AppProps & AppOwnProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
 
   return (
-    // <div>
-    //   <h1>Hi here!</h1>
-    //   <Component />
-    // </div>
-
-    <ThemeProvider>
-      <Header />
-      <RootLayout>
-        <h1>Hi here!</h1>
-        <Provider store={store}>
-          <Component {...props.pageProps} />
-        </Provider>
-        {/* <Component {...props.pageProps} /> */}
-      </RootLayout>
-      <Footer />
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <Header />
+        <RootLayout>
+          <h1>Hi here!</h1>
+          <Provider store={store}>
+            <Component {...props.pageProps} />
+          </Provider>
+        </RootLayout>
+        <Footer />
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

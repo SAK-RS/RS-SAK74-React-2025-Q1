@@ -38,7 +38,11 @@
 }
 
 body {
-  margin: 0;
+  margin: 0 auto;
   min-width: 320px;
   min-height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

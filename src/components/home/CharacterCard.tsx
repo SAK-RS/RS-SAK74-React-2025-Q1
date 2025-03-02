@@ -1,5 +1,8 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { type FC } from 'react';
-import { Link, useSearchParams } from 'react-router';
+// import { Link, useSearchParams } from 'react-router';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
   addToSelected,
@@ -15,17 +18,19 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
 
   const isSelected = selectedIds.includes(character.id);
 
-  const [searchParams] = useSearchParams();
+  const { query } = useRouter();
 
   return (
     <div
       className="border-2 border-primary p-4 rounded-md shadow-lg flex flex-col items-center bg-gray-100 dark:bg-gray-600"
       data-testid="card"
     >
-      <img
+      <Image
         src={character.image}
         alt={character.name}
-        className="w-24 h-24 rounded-full mb-4"
+        width={96}
+        height={96}
+        className="rounded-full mb-4"
         loading="lazy"
       />
       <h2 className="text-xl font-bold mb-2">{character.name}</h2>
@@ -46,9 +51,9 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
       <div className="flex justify-between w-full ">
         <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
-          to={{
-            pathname: `details/${character.id}`,
-            search: searchParams.toString(),
+          href={{
+            pathname: `${character.id}`,
+            query: { search: query.search, page: query.page },
           }}
           onClick={(ev) => {
             ev.stopPropagation();
