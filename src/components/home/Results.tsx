@@ -4,10 +4,10 @@ import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
 
 import { useGetCharactersQuery } from 'store/apiSlice';
-// import { useStateSelector } from 'store';
-// import { selectedAmount } from 'store/selectedHeroesSlice';
+import { useStateSelector } from 'store';
+import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
-// import MenuSelected from './MenuOfSelected';
+import MenuSelected from './MenuOfSelected';
 import Modal from 'components/Modal';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -33,7 +33,7 @@ const Results: FC = () => {
     }
   }, [data, isSuccess]);
 
-  // const selectedLenght = useStateSelector(selectedAmount);
+  const selectedLenght = useStateSelector(selectedAmount);
 
   return (
     <>
@@ -84,9 +84,14 @@ const Results: FC = () => {
           <Spinner size="large" />
         </Modal>
       )}
-      {/* {Boolean(selectedLenght) && (
-            <MenuSelected quantity={selectedLenght} />
-          )} */}
+      {Boolean(selectedLenght) && (
+        <MenuSelected
+          quantity={selectedLenght}
+          onClick={(ev) => {
+            ev.stopPropagation();
+          }}
+        />
+      )}
     </>
   );
 };

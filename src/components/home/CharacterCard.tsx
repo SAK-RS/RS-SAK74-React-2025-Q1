@@ -48,16 +48,19 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           <strong>Gender:</strong> {character.gender}
         </p>
       </div>
-      <div className="flex justify-between w-full ">
+      <div
+        className="flex justify-between w-full"
+        onClick={(ev) => {
+          ev.stopPropagation();
+        }}
+      >
         <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
           href={{
             pathname: `${character.id}`,
             query: { search: query.search, page: query.page },
           }}
-          onClick={(ev) => {
-            ev.stopPropagation();
-          }}
+          scroll={false}
         >
           View details
         </Link>
