@@ -10,6 +10,7 @@ export default function Page() {
         onClick={() => {
           router.back();
         }}
+        className="cursor-pointer"
       >
         Go back
       </button>

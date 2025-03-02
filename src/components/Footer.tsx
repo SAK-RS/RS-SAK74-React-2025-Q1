@@ -1,5 +1,6 @@
 import { cn } from 'utils/cn';
 import { useTheme } from './ThemeProvider';
+import Image from 'next/image';
 
 export default function Footer() {
   const { isDark } = useTheme();
@@ -12,11 +13,14 @@ export default function Footer() {
         }
       )}
     >
-      <img
-        src="https://old.rs.school/images/rs_school.svg"
-        alt="rs-logo"
-        width={100}
-      />
+      <div className="relative w-24 h-10">
+        <Image
+          src="https://old.rs.school/images/rs_school.svg"
+          alt="rs-logo"
+          fill
+        />
+      </div>
+
       <strong className="space-x-2">
         <a href="https://github.com/SAK-RS">SAK74 ©</a>
 

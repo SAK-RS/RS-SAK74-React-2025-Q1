@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { type FC } from 'react';
-// import { Link, useSearchParams } from 'react-router';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
   addToSelected,

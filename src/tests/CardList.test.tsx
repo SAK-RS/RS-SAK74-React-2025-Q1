@@ -1,17 +1,23 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import Results from 'components/home/Results';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
-import { store } from 'store';
+import { makeStore } from 'store';
 import * as apiSlice from 'store/apiSlice';
 import { results as mockedResults } from './mock/data.json';
 import userEvent from '@testing-library/user-event';
 
+const store = makeStore();
+
+const mockedRouterPushFn = vi.hoisted(() => vi.fn());
+vi.mock('next/router', () => ({
+  useRouter() {
+    return { query: {}, push: mockedRouterPushFn };
+  },
+}));
+
 const WrappedResults = () => (
   <Provider store={store}>
-    <MemoryRouter>
-      <Results search="" />
-    </MemoryRouter>
+    <Results />
   </Provider>
 );
 

@@ -12,15 +12,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       include: ['src/**/*.tsx'],
-      exclude: [
-        'src/App.tsx',
-        'src/main.tsx',
-        'src/utils/**',
-        'src/routes.tsx',
-        '**/Error*',
-        '**/Example*',
-        '**/Footer.tsx',
-      ],
+      exclude: ['src/utils/**', '**/Error*', '**/Footer.tsx', '**/pages/**'],
       clean: true,
     },
   },

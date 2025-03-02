@@ -2,11 +2,19 @@ import { cleanup, render, screen } from '@testing-library/react';
 import Pagination from 'components/home/Pagination';
 import userEvent from '@testing-library/user-event';
 import SearchResult from 'components/home/Results';
-import { BrowserRouter } from 'react-router';
 import { Provider } from 'react-redux';
-import { store } from 'store';
+import { makeStore } from 'store';
+
+const store = makeStore();
 
 const user = userEvent.setup();
+
+const mockedRouterPushFn = vi.hoisted(() => vi.fn());
+vi.mock('next/router', () => ({
+  useRouter() {
+    return { query: {}, push: mockedRouterPushFn };
+  },
+}));
 
 describe('Pagination testing', () => {
   const mockedFn = vi.fn();
@@ -44,14 +52,12 @@ describe('Pagination testing', () => {
 
 const WrappedResults = () => (
   <Provider store={store}>
-    <BrowserRouter>
-      <SearchResult search="" />
-    </BrowserRouter>
+    <SearchResult />
   </Provider>
 );
 
 import * as apiSlice from 'store/apiSlice';
-import { MockInstance } from 'vitest';
+import { API_URL } from 'api';
 const mockCharacterData = {
   info: {
     pages: 3,
@@ -62,18 +68,14 @@ const mockCharacterData = {
       name: 'Rick',
       status: 'Alive',
       species: 'Human',
-      image: 'rick.jpg',
+      image: `${API_URL}/rick.jpg`,
     },
   ],
 };
 
 describe('Integration testing', () => {
-  const getSearchParamsPage = () =>
-    new URL(location.toString()).searchParams.get('searchPage');
-  let queryMock: MockInstance;
-
   beforeEach(() => {
-    queryMock = vi.spyOn(apiSlice, 'useGetCharactersQuery').mockReturnValue({
+    vi.spyOn(apiSlice, 'useGetCharactersQuery').mockReturnValue({
       data: mockCharacterData,
       isLoading: false,
       isSuccess: true,
@@ -88,20 +90,15 @@ describe('Integration testing', () => {
     vi.clearAllMocks();
   });
 
-  it('Initial query param page should be 1', () => {
-    expect(getSearchParamsPage()).toBe('1');
-  });
-
   it('Should update page on pagination click', async () => {
     const nextButton = screen.getAllByText('▶')[0];
+
     await user.click(nextButton);
 
-    expect(queryMock).toHaveBeenCalledWith(
-      expect.objectContaining({
+    expect(mockedRouterPushFn).toHaveBeenCalledWith({
+      query: expect.objectContaining({
         page: 2,
-        name: '',
-      })
-    );
-    expect(getSearchParamsPage()).toBe('2');
+      }),
+    });
   });
 });

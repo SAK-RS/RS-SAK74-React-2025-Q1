@@ -6,7 +6,7 @@ import { createWrapper } from 'next-redux-wrapper';
 
 const reducer = combineSlices(charactersApi, selectedCharacters);
 
-const makeStore = () =>
+export const makeStore = () =>
   configureStore({
     reducer,
     middleware(getDefaultMiddleware) {

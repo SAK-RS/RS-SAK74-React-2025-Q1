@@ -13,7 +13,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 const Results: FC = () => {
-  const { query, push, pathname } = useRouter();
+  const { query, push } = useRouter();
 
   const search = query.search as string;
 
@@ -46,7 +46,7 @@ const Results: FC = () => {
               page={page}
               totalPages={totalPages}
               setPage={(page) => {
-                push({ pathname, query: { search: query.search, page } });
+                push({ query: { search: query.search, page } });
               }}
             />
             <Link
@@ -73,7 +73,7 @@ const Results: FC = () => {
             page={page}
             totalPages={totalPages}
             setPage={(page) => {
-              push({ pathname, query: { ...query, page } });
+              push({ query: { search: query.search, page } });
             }}
           />
         </div>

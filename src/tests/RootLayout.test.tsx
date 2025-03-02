@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { vi } from 'vitest';
-import RootLayout from 'pages/RootLayout';
+import RootLayout from 'components/RootLayout';
 import * as ThemeProvider from 'components/ThemeProvider';
 import Header from 'components/Header';
 import userEvent from '@testing-library/user-event';
@@ -53,5 +53,14 @@ describe('RootLayout', () => {
     expect(toggleBtn).toBeInTheDocument();
     await userEvent.click(toggleBtn);
     expect(toggleFn).toHaveBeenCalled();
+  });
+
+  it('throws error when error button is clicked', async () => {
+    render(<RootLayout />);
+    const errorButton = screen.getByRole('button', { name: /throw error/i });
+
+    expect(() => userEvent.click(errorButton)).rejects.toThrow(
+      'Error thrown from Home page'
+    );
   });
 });

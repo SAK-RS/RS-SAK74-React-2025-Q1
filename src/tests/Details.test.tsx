@@ -1,12 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { fn, spyOn } from '@vitest/spy';
-import { Details } from 'pages/Details';
-import * as router from 'react-router';
-
-vi.mock('react-router', () => ({
-  useLoaderData: vi.fn(),
-  useOutletContext: vi.fn(),
-}));
+import Details from 'components/home/Details';
 
 import { results } from './mock/data.json';
 
@@ -16,14 +10,15 @@ import * as apiSlice from 'store/apiSlice';
 
 const queryMock = spyOn(apiSlice, 'useGetCharacterByIdQuery');
 
+const mockedRouterPushFn = vi.hoisted(() => vi.fn());
+vi.mock('next/router', () => ({
+  useRouter() {
+    return { query: {}, push: mockedRouterPushFn };
+  },
+}));
+
 describe('Details', () => {
   beforeEach(() => {
-    vi.mocked(router.useLoaderData).mockReturnValue(
-      mockCharacter.id.toString()
-    );
-    vi.mocked(router.useOutletContext).mockReturnValue({
-      closeDetails: vi.fn(),
-    });
     queryMock.mockReturnValue({
       refetch: fn(),
     });
@@ -33,7 +28,7 @@ describe('Details', () => {
   });
 
   it('renders with initial title', () => {
-    const { getByText } = render(<Details />);
+    const { getByText } = render(<Details id={mockCharacter.id.toString()} />);
     expect(getByText('Details:')).toBeInTheDocument();
   });
 
@@ -42,7 +37,7 @@ describe('Details', () => {
       refetch: fn(),
       isLoading: true,
     });
-    render(<Details />);
+    render(<Details id={mockCharacter.id.toString()} />);
     const loader = screen.getByText('loading');
     expect(loader).toBeInTheDocument();
   });
@@ -53,7 +48,7 @@ describe('Details', () => {
       isSuccess: true,
       data: mockCharacter,
     });
-    render(<Details />);
+    render(<Details id={mockCharacter.id.toString()} />);
     const { name, ...rest } = mockCharacter;
     expect(screen.getByText(name)).toBeInTheDocument();
     for (const key in rest) {
@@ -62,20 +57,17 @@ describe('Details', () => {
   });
 
   it('calls closeDetails when close button clicked', async () => {
-    const mockCloseDetails = fn();
-    vi.mocked(router.useOutletContext).mockReturnValue({
-      closeDetails: mockCloseDetails,
-    });
+    // const mockCloseDetails = fn();
 
-    render(<Details />);
+    render(<Details id={mockCharacter.id.toString()} />);
 
     const closeButton = await screen.findByRole('button');
     closeButton.click();
-    expect(mockCloseDetails).toHaveBeenCalled();
+    expect(mockedRouterPushFn).toHaveBeenCalled();
   });
 
   it('query should be called with appropriate param', () => {
-    render(<Details />);
+    render(<Details id={mockCharacter.id.toString()} />);
     expect(queryMock).toHaveBeenCalledWith(mockCharacter.id.toString());
   });
 });
