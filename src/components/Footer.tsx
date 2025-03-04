@@ -1,3 +1,5 @@
+'use client';
+
 import { cn } from 'utils/cn';
 import { useTheme } from './ThemeProvider';
 import Image from 'next/image';

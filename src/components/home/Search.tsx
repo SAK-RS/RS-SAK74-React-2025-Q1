@@ -1,5 +1,7 @@
+'use client';
+
 import Button from 'components/Button';
-import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import {
   useEffect,
   useState,
@@ -16,14 +18,14 @@ const Search: FC = () => {
     setInputValue(window.localStorage.getItem(LOCAL_STORAGE_KEY) || '');
   }, []);
 
-  const { push } = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (ev) => {
-    ev.preventDefault();
+    if (inputValue === searchParams.get('search')) {
+      ev.preventDefault();
+      return;
+    }
     window.localStorage.setItem(LOCAL_STORAGE_KEY, inputValue);
-    push({
-      query: { search: inputValue, page: 1 },
-    });
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({
@@ -43,6 +45,7 @@ const Search: FC = () => {
           onChange={handleChange}
           name="search"
         />
+        <input type="hidden" name="page" value={1} />
         <Button>Search</Button>
       </form>
     </div>

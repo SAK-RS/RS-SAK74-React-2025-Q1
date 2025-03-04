@@ -1,3 +1,5 @@
+'use client';
+
 import { useTheme } from 'components/ThemeProvider';
 import { useEffect, useState, type FC, type PropsWithChildren } from 'react';
 import { cn } from 'utils/cn';

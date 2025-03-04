@@ -1,3 +1,5 @@
+'use client';
+
 import React, { ErrorInfo, PropsWithChildren } from 'react';
 
 interface ComponentState {

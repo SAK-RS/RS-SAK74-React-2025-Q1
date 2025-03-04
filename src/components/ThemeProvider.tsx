@@ -1,7 +1,9 @@
+'use client';
+
 import {
   createContext,
-  Dispatch,
-  SetStateAction,
+  type Dispatch,
+  type SetStateAction,
   use,
   useEffect,
   useState,
