@@ -1,25 +1,30 @@
+'use client';
+
 import { type FC, useEffect, useState } from 'react';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
-
 import { useGetCharactersQuery } from 'store/apiSlice';
 import { useStateSelector } from 'store';
 import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
-import MenuSelected from './MenuOfSelected';
-import Modal from 'components/Modal';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import MenuSelected from './MenuOfSelected';
+const Modal = dynamic(() => import('components/Modal'), { ssr: false });
 
-const Results: FC = () => {
-  const { query, push } = useRouter();
+type ResultsProps = {
+  search?: string;
+  page?: number;
+};
 
-  const search = query.search as string;
+const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
+  console.log('Results Component');
+
+  console.log({ search, page });
 
   const [totalPages, setTotalPages] = useState(1);
-
-  const page = Number(query.page ?? 1);
 
   const { data, isError, error, isLoading, isSuccess, isFetching } =
     useGetCharactersQuery({
@@ -34,6 +39,7 @@ const Results: FC = () => {
   }, [data, isSuccess]);
 
   const selectedLenght = useStateSelector(selectedAmount);
+  const router = useRouter();
 
   return (
     <>
@@ -46,11 +52,15 @@ const Results: FC = () => {
               page={page}
               totalPages={totalPages}
               setPage={(page) => {
-                push({ query: { search: query.search, page } });
+                router.push(`?search=${search ?? ''}&page=${page}`, {
+                  scroll: false,
+                });
+                router.refresh();
               }}
             />
             <Link
-              href={{ pathname: '/example', query }}
+              // todo: maintain query params
+              href={{ pathname: '/example', query: {} }}
               onClick={(ev) => {
                 ev.stopPropagation();
               }}
@@ -73,7 +83,10 @@ const Results: FC = () => {
             page={page}
             totalPages={totalPages}
             setPage={(page) => {
-              push({ query: { search: query.search, page } });
+              router.push(`?search=${search ?? ''}&page=${page}`, {
+                scroll: false,
+              });
+              router.refresh();
             }}
           />
         </div>

@@ -1,19 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_URL, type CharacterResponse, type SearchType } from 'api';
-import { HYDRATE } from 'next-redux-wrapper';
 import type { Character } from 'types';
-import type { PayloadAction } from '@reduxjs/toolkit';
 
 export const charactersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     timeout: 3000,
   }),
-  extractRehydrationInfo(action: PayloadAction, { reducerPath }) {
-    if (action.type === HYDRATE) {
-      return action.payload[reducerPath];
-    }
-  },
+
   endpoints: (builder) => ({
     getCharacters: builder.query<
       CharacterResponse,

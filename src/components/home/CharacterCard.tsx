@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { type FC } from 'react';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
@@ -16,8 +15,6 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
   const selectedIds = useStateSelector(selectSelectedCharactersIds);
 
   const isSelected = selectedIds.includes(character.id);
-
-  const { query } = useRouter();
 
   return (
     <div
@@ -56,8 +53,10 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
         <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
           href={{
-            pathname: `${character.id}`,
-            query: { search: query.search, page: query.page },
+            pathname: `/search/${character.id}`,
+            // todo: maintain query params
+
+            // query: { search: query.search, page: query.page },
           }}
           scroll={false}
         >

@@ -10,9 +10,5 @@ export default async function SearchPage({
 
   console.log({ search, page });
 
-  return (
-    <section>
-      <Search />
-    </section>
-  );
+  return <Search />;
 }

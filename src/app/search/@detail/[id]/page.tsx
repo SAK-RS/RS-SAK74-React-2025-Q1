@@ -1,9 +1,6 @@
-export default async function Page({ params }: { params: { id?: string } }) {
+import Details from 'components/home/Details';
+
+export default async function Page({ params }: { params: { id: string } }) {
   const { id } = await params;
-  return (
-    <main>
-      <h1>Detail page</h1>
-      <p>ID: {id}</p>
-    </main>
-  );
+  return <Details id={id} />;
 }

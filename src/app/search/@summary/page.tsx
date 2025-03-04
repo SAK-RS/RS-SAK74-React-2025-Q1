@@ -1,4 +1,6 @@
-export default async function Results({
+import Results from 'components/home/Results';
+
+export default async function ResultsPage({
   params,
   searchParams,
 }: {
@@ -9,13 +11,5 @@ export default async function Results({
   const { search, page } = await searchParams;
   console.log({ id, search, page });
 
-  return (
-    <section>
-      <h1>Summary page</h1>
-      <p>
-        search: {search}, page: {page}
-      </p>
-      {/* <Search /> */}
-    </section>
-  );
+  return <Results search={search} page={page ? Number(page) : undefined} />;
 }

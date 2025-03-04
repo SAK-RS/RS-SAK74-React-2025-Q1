@@ -8,12 +8,12 @@ export default function Layout({
   detail: React.ReactNode;
 }) {
   return (
-    <section className="">
-      {children}
+    <>
+      <section>{children}</section>
       <div className="flex justify-between">
-        {summary}
-        {detail}
+        <section className="w-full">{summary}</section>
+        <section>{detail}</section>
       </div>
-    </section>
+    </>
   );
 }

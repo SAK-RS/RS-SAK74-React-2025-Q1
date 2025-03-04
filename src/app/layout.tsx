@@ -2,6 +2,7 @@ import ErrorBoundary from 'components/ErrorBoundary';
 import Footer from 'components/Footer';
 import Header from 'components/Header';
 import RootLayout from 'components/RootLayout';
+import StoreProvider from 'components/StoreProvider';
 import ThemeProvider from 'components/ThemeProvider';
 import 'index.css';
 
@@ -12,7 +13,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <ErrorBoundary>
           <ThemeProvider>
             <Header />
-            <RootLayout>{children}</RootLayout>
+            <StoreProvider>
+              <RootLayout>{children}</RootLayout>
+            </StoreProvider>
             <Footer />
           </ThemeProvider>
         </ErrorBoundary>
