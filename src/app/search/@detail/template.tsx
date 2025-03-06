@@ -7,7 +7,15 @@ export default function DetailsTemplate({
 }: {
   children: React.ReactNode;
 }) {
-  console.log({ children });
   const pathname = usePathname();
-  return <>{/\/\d/g.test(pathname) && children}</>;
+
+  return (
+    <>
+      {pathname !== '/search' && (
+        <div className="w-md sticky top-16">{children}</div>
+      )}
+    </>
+  );
 }
+
+// export const dynamic = 'force-static';

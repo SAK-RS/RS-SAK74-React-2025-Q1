@@ -9,7 +9,7 @@ import { useStateSelector } from 'store';
 import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import MenuSelected from './MenuOfSelected';
 const Modal = dynamic(() => import('components/Modal'), { ssr: false });
@@ -20,10 +20,6 @@ type ResultsProps = {
 };
 
 const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
-  console.log('Results Component');
-
-  console.log({ search, page });
-
   const [totalPages, setTotalPages] = useState(1);
 
   const { data, isError, error, isLoading, isSuccess, isFetching } =
@@ -38,11 +34,28 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
     }
   }, [data, isSuccess]);
 
+  const [isSSR, setIsSSR] = useState(true);
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
   const selectedLenght = useStateSelector(selectedAmount);
   const router = useRouter();
+  const pathName = usePathname();
+
+  const onPageChange = (page: number) => {
+    router.push(`${pathName}?search=${search ?? ''}&page=${page}`, {
+      scroll: false,
+    });
+    router.refresh();
+  };
 
   return (
     <>
+      {(isLoading || isFetching) && isSSR && (
+        <Spinner size="large" className="my-4" />
+      )}
+
       {isError && <SearchError error={error} />}
       {isSuccess && (
         <div className="flex flex-col">
@@ -51,16 +64,10 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
               className="self-start mb-4 ml-4"
               page={page}
               totalPages={totalPages}
-              setPage={(page) => {
-                router.push(`?search=${search ?? ''}&page=${page}`, {
-                  scroll: false,
-                });
-                router.refresh();
-              }}
+              setPage={onPageChange}
             />
             <Link
-              // todo: maintain query params
-              href={{ pathname: '/example', query: {} }}
+              href={'/example'}
               onClick={(ev) => {
                 ev.stopPropagation();
               }}
@@ -82,12 +89,7 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
             className="self-end mt-4 mr-4"
             page={page}
             totalPages={totalPages}
-            setPage={(page) => {
-              router.push(`?search=${search ?? ''}&page=${page}`, {
-                scroll: false,
-              });
-              router.refresh();
-            }}
+            setPage={onPageChange}
           />
         </div>
       )}

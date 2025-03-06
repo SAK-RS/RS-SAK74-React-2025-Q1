@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { type FC } from 'react';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
@@ -15,6 +16,8 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
   const selectedIds = useStateSelector(selectSelectedCharactersIds);
 
   const isSelected = selectedIds.includes(character.id);
+
+  const searchParams = useSearchParams();
 
   return (
     <div
@@ -54,9 +57,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
           href={{
             pathname: `/search/${character.id}`,
-            // todo: maintain query params
-
-            // query: { search: query.search, page: query.page },
+            query: searchParams.toString(),
           }}
           scroll={false}
         >

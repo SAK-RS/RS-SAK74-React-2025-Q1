@@ -16,6 +16,7 @@ const Pagination: FC<PaginationProps> = ({
   ...other
 }) => {
   const handlePageChange: ReactEventHandler<HTMLButtonElement> = (ev) => {
+    ev.stopPropagation();
     const { name } = ev.currentTarget;
     if (name === 'decrease') {
       setPage(Math.max(page - 1, 1));

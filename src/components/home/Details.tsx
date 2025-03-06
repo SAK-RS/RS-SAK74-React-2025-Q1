@@ -3,36 +3,26 @@
 import Button from 'components/Button';
 import DetailsPage from 'components/home/CharactersDetails';
 import Spinner from 'components/Spinner';
-import { useRouter } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import type { FC } from 'react';
 
 import { useGetCharacterByIdQuery } from 'store/apiSlice';
-import { cn } from 'utils/cn';
+import { Character } from 'types';
 
 const Details: FC<{ id: string }> = ({ id }) => {
-  const [isOpened, setIsOpened] = useState(false);
-
   const { data, isSuccess, isLoading, isFetching } =
     useGetCharacterByIdQuery(id);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
   const closeDetails = () => {
-    router.push('/search');
+    router.push(`/search?${searchParams.toString()}`);
     router.refresh();
   };
 
-  useEffect(() => {
-    setIsOpened(true);
-  }, []);
-
   return (
     <div
-      className={cn(
-        'w-20 h-full bg-gray-400 text-gray-600 transition-[width] duration-1000 ease-in-out border border-primary rounded-sm py-4 mt-4 relative',
-        {
-          'w-full max-w-lg': isOpened,
-        }
-      )}
+      className="bg-gray-400 text-gray-600 border border-primary rounded-sm pb-4 relative animate-acordeon"
       onClick={(ev) => {
         ev.stopPropagation();
       }}
@@ -43,9 +33,9 @@ const Details: FC<{ id: string }> = ({ id }) => {
       >
         ❌
       </div>
-      <p className="font-lg">Details:</p>
+      <h2 className="font-lg text-gray-200 bg-gray-500 py-2">Details:</h2>
       <Spinner loading={isLoading || isFetching} />
-      {isSuccess && <DetailsPage character={data} />}
+      {isSuccess && <DetailsPage character={data as Character} />}
       <Button onClick={closeDetails} size="small" className="my-2">
         Close
       </Button>
