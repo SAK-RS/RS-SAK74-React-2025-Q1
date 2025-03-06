@@ -11,10 +11,11 @@ import * as apiSlice from 'store/apiSlice';
 const queryMock = spyOn(apiSlice, 'useGetCharacterByIdQuery');
 
 const mockedRouterPushFn = vi.hoisted(() => vi.fn());
-vi.mock('next/router', () => ({
+vi.mock('next/navigation', () => ({
   useRouter() {
-    return { query: {}, push: mockedRouterPushFn };
+    return { push: mockedRouterPushFn, refresh: vi.fn() };
   },
+  useSearchParams: () => new URLSearchParams('search=example'),
 }));
 
 describe('Details', () => {
@@ -57,8 +58,6 @@ describe('Details', () => {
   });
 
   it('calls closeDetails when close button clicked', async () => {
-    // const mockCloseDetails = fn();
-
     render(<Details id={mockCharacter.id.toString()} />);
 
     const closeButton = await screen.findByRole('button');

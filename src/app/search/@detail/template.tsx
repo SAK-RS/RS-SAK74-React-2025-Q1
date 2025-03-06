@@ -17,5 +17,3 @@ export default function DetailsTemplate({
     </>
   );
 }
-
-// export const dynamic = 'force-static';

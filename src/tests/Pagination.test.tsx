@@ -2,18 +2,16 @@ import { cleanup, render, screen } from '@testing-library/react';
 import Pagination from 'components/home/Pagination';
 import userEvent from '@testing-library/user-event';
 import SearchResult from 'components/home/Results';
-import { Provider } from 'react-redux';
-import { makeStore } from 'store';
-
-const store = makeStore();
 
 const user = userEvent.setup();
 
 const mockedRouterPushFn = vi.hoisted(() => vi.fn());
-vi.mock('next/router', () => ({
+vi.mock('next/navigation', () => ({
   useRouter() {
-    return { query: {}, push: mockedRouterPushFn };
+    return { push: mockedRouterPushFn, refresh: vi.fn() };
   },
+  usePathname: () => '/search',
+  useSearchParams: () => new URLSearchParams('search=example'),
 }));
 
 describe('Pagination testing', () => {
@@ -51,13 +49,14 @@ describe('Pagination testing', () => {
 });
 
 const WrappedResults = () => (
-  <Provider store={store}>
+  <StoreProvider>
     <SearchResult />
-  </Provider>
+  </StoreProvider>
 );
 
 import * as apiSlice from 'store/apiSlice';
 import { API_URL } from 'api';
+import StoreProvider from 'components/StoreProvider';
 const mockCharacterData = {
   info: {
     pages: 3,
@@ -95,10 +94,8 @@ describe('Integration testing', () => {
 
     await user.click(nextButton);
 
-    expect(mockedRouterPushFn).toHaveBeenCalledWith({
-      query: expect.objectContaining({
-        page: 2,
-      }),
-    });
+    expect(mockedRouterPushFn.mock.calls[0]).toEqual(
+      expect.arrayContaining([expect.stringContaining('page=2')])
+    );
   });
 });

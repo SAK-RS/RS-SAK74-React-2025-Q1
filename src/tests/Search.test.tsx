@@ -1,14 +1,10 @@
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Search from 'components/home/Search';
-// import { useRouter } from 'next/router';
+import Search, { LOCAL_STORAGE_KEY } from 'components/home/Search';
 import { MockInstance } from 'vitest';
 
-const mockedRouterPush = vi.fn();
-vi.mock('next/router', () => ({
-  useRouter() {
-    return { push: mockedRouterPush };
-  },
+vi.mock('next/navigation', () => ({
+  useSearchParams: () => new URLSearchParams('test=example'),
 }));
 
 describe('Search Component', () => {
@@ -53,9 +49,9 @@ describe('Search Component', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Search' }));
 
-    expect(mockedRouterPush).toHaveBeenCalledWith({
-      query: { search: 'test search', page: 1 },
-    });
-    expect(setStorageSpy).toHaveBeenCalledOnce();
+    expect(setStorageSpy).toHaveBeenCalledWith(
+      LOCAL_STORAGE_KEY,
+      'test search'
+    );
   });
 });
