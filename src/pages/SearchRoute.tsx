@@ -17,7 +17,10 @@ export default function ResultsPage({
 }: Route.ComponentProps) {
   const navigate = useNavigate();
   const onCloseDetails = () => {
-    navigate({ pathname: '/search', search: `search=${search}&page=${page}` });
+    navigate({
+      pathname: '/search',
+      search: `search=${search || ''}&page=${page || 1}`,
+    });
   };
   return (
     <>

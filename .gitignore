@@ -30,3 +30,4 @@ src/_pages/**
 
 /.react-router/
 _app
+.vercel
