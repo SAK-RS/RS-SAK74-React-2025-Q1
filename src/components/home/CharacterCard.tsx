@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { Link, useSearchParams } from 'react-router';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
   addToSelected,
@@ -14,7 +15,7 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
 
   const isSelected = selectedIds.includes(character.id);
 
-  // const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   return (
     <div
@@ -50,17 +51,16 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           ev.stopPropagation();
         }}
       >
-        {/* todo: add link to details */}
-        {/* <Link
+        <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
-          href={{
+          to={{
             pathname: `/search/${character.id}`,
-            query: searchParams.toString(),
+            search: searchParams.toString(),
           }}
-          scroll={false}
+          preventScrollReset
         >
           View details
-        </Link> */}
+        </Link>
         <button
           title={isSelected ? 'Unselect' : 'Select'}
           onClick={() => {

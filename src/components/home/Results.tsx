@@ -26,8 +26,6 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
 
   useEffect(() => {
     if (isSuccess) {
-      console.log('Change pages: ', data.info.pages);
-
       setTotalPages(data.info.pages);
     }
   }, [data, isSuccess]);

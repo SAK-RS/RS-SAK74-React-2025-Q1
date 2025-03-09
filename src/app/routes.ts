@@ -1,7 +1,9 @@
 import { index, route, type RouteConfig } from '@react-router/dev/routes';
 
 export default [
-  index('../components/Index.tsx'),
-  route('search', '../components/SearchRoute.tsx'),
-  route('example', '../components/ExamplePage.tsx'),
+  index('../pages/Index.tsx'),
+  route('search', '../pages/SearchRoute.tsx', [
+    route(':id', '../pages/DetailsRoute.tsx'),
+  ]),
+  route('example', '../pages/ExamplePage.tsx'),
 ] satisfies RouteConfig;

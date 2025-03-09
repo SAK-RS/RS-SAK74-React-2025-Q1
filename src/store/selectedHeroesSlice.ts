@@ -31,6 +31,10 @@ export const {
   selectById: selectSelectedCharacterById,
   selectIds: selectSelectedCharactersIds,
   selectTotal: selectedAmount,
-} = selectedCharactersAdapter.getSelectors<TypedState>(
-  (state) => state['selected-characters']
-);
+} = selectedCharactersAdapter.getSelectors<
+  TypedState & {
+    'selected-characters': ReturnType<
+      typeof selectedCharactersAdapter.getInitialState
+    >;
+  }
+>((state) => state['selected-characters']);

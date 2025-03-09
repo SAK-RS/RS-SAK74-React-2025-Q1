@@ -14,6 +14,7 @@ import Header from 'components/Header';
 import Footer from 'components/Footer';
 import StoreProvider from 'components/StoreProvider';
 import RootLayout from 'components/RootLayout';
+import ClientErrorBoundary from 'components/ErrorBoundary';
 
 export const links: Route.LinksFunction = () => [
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -48,15 +49,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <Header />
-      <StoreProvider>
-        <RootLayout>
-          <Outlet />
-        </RootLayout>
-      </StoreProvider>
-      <Footer />
-    </ThemeProvider>
+    <ClientErrorBoundary>
+      <ThemeProvider>
+        <Header />
+        <StoreProvider>
+          <RootLayout>
+            <Outlet />
+          </RootLayout>
+        </StoreProvider>
+        <Footer />
+      </ThemeProvider>
+    </ClientErrorBoundary>
   );
 }
 
