@@ -1,7 +1,7 @@
-'use client';
+// 'use client';
 
 import Button from 'components/Button';
-import { useSearchParams } from 'next/navigation';
+// import { useSearchParams } from 'next/navigation';
 import {
   useEffect,
   useState,
@@ -9,6 +9,7 @@ import {
   type FC,
   type FormEventHandler,
 } from 'react';
+import { useSearchParams } from 'react-router';
 
 export const LOCAL_STORAGE_KEY = '__search';
 
@@ -18,9 +19,11 @@ const Search: FC = () => {
     setInputValue(window.localStorage.getItem(LOCAL_STORAGE_KEY) || '');
   }, []);
 
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (ev) => {
+    // todo: add handler
     if (inputValue === searchParams.get('search')) {
       ev.preventDefault();
       return;

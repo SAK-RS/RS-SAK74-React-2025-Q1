@@ -1,5 +1,3 @@
-'use client';
-
 import { type FC, useEffect, useState } from 'react';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
@@ -8,11 +6,9 @@ import { useGetCharactersQuery } from 'store/apiSlice';
 import { useStateSelector } from 'store';
 import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import MenuSelected from './MenuOfSelected';
-const Modal = dynamic(() => import('components/Modal'), { ssr: false });
+import Modal from 'components/Modal';
+import { Link, useNavigate } from 'react-router';
 
 type ResultsProps = {
   search?: string;
@@ -30,6 +26,8 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
 
   useEffect(() => {
     if (isSuccess) {
+      console.log('Change pages: ', data.info.pages);
+
       setTotalPages(data.info.pages);
     }
   }, [data, isSuccess]);
@@ -40,14 +38,11 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
   }, []);
 
   const selectedLenght = useStateSelector(selectedAmount);
-  const router = useRouter();
-  const pathName = usePathname();
+
+  const navigate = useNavigate();
 
   const onPageChange = (page: number) => {
-    router.push(`${pathName}?search=${search ?? ''}&page=${page}`, {
-      scroll: false,
-    });
-    router.refresh();
+    navigate({ search: `search=${search ?? ''}&page=${page}` });
   };
 
   return (
@@ -67,7 +62,7 @@ const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
               setPage={onPageChange}
             />
             <Link
-              href={'/example'}
+              to={'/example'}
               onClick={(ev) => {
                 ev.stopPropagation();
               }}
