@@ -5,6 +5,7 @@ import RootLayout from 'components/RootLayout';
 import StoreProvider from 'components/StoreProvider';
 import ThemeProvider from 'components/ThemeProvider';
 import 'index.css';
+import { Suspense } from 'react';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,7 +15,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <ThemeProvider>
             <Header />
             <StoreProvider>
-              <RootLayout>{children}</RootLayout>
+              <RootLayout>
+                <Suspense>{children}</Suspense>
+              </RootLayout>
             </StoreProvider>
             <Footer />
           </ThemeProvider>
