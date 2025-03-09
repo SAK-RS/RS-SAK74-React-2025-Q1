@@ -5,15 +5,6 @@ import SearchResult from 'components/home/Results';
 
 const user = userEvent.setup();
 
-const mockedRouterPushFn = vi.hoisted(() => vi.fn());
-vi.mock('next/navigation', () => ({
-  useRouter() {
-    return { push: mockedRouterPushFn, refresh: vi.fn() };
-  },
-  usePathname: () => '/search',
-  useSearchParams: () => new URLSearchParams('search=example'),
-}));
-
 describe('Pagination testing', () => {
   const mockedFn = vi.fn();
   let unmount: () => void;
@@ -50,13 +41,26 @@ describe('Pagination testing', () => {
 
 const WrappedResults = () => (
   <StoreProvider>
-    <SearchResult />
+    <MemoryRouter>
+      <SearchResult />
+    </MemoryRouter>
   </StoreProvider>
 );
 
 import * as apiSlice from 'store/apiSlice';
 import { API_URL } from 'api';
 import StoreProvider from 'components/StoreProvider';
+import { MemoryRouter } from 'react-router';
+
+const mockedNavigate = vi.hoisted(() => vi.fn());
+vi.mock('react-router', async (originalImport) => {
+  const original = await originalImport<typeof import('react-router')>();
+  return {
+    ...original,
+    useNavigate: () => mockedNavigate,
+  };
+});
+
 const mockCharacterData = {
   info: {
     pages: 3,
@@ -94,8 +98,8 @@ describe('Integration testing', () => {
 
     await user.click(nextButton);
 
-    expect(mockedRouterPushFn.mock.calls[0]).toEqual(
-      expect.arrayContaining([expect.stringContaining('page=2')])
+    expect(mockedNavigate).toHaveBeenCalledWith(
+      expect.objectContaining({ search: expect.stringContaining('page=2') })
     );
   });
 });

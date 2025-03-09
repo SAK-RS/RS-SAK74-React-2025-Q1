@@ -5,21 +5,15 @@ import { makeStore } from 'store';
 import * as apiSlice from 'store/apiSlice';
 import { results as mockedResults } from './mock/data.json';
 import userEvent from '@testing-library/user-event';
+import { MemoryRouter } from 'react-router';
 
 const store = makeStore();
 
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    refresh: vi.fn(),
-  }),
-  usePathname: () => '/search',
-  useSearchParams: () => new URLSearchParams('search=example'),
-}));
-
 const WrappedResults = () => (
   <Provider store={store}>
-    <Results />
+    <MemoryRouter>
+      <Results />
+    </MemoryRouter>
   </Provider>
 );
 
@@ -36,10 +30,10 @@ describe('Results Component', () => {
     vi.resetAllMocks();
   });
 
-  // it('Should show loading spinner initially', () => {
-  //   const spiner = screen.getByText('loading');
-  //   expect(spiner).toBeInTheDocument();
-  // });
+  it('Should show loading spinner initially', () => {
+    const spiner = screen.getByText('loading');
+    expect(spiner).toBeInTheDocument();
+  });
 
   it('Search list should be rendered', async () => {
     const list = await screen.findByTestId('list');

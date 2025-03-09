@@ -4,29 +4,27 @@ import CharacterCard from 'components/home/CharacterCard';
 import type { Character } from 'types';
 import { results } from 'tests/mock/data.json';
 import StoreProvider from 'components/StoreProvider';
+import { MemoryRouter } from 'react-router';
 
 describe('CharacterCard', () => {
   const mockCharacter: Character = results[Math.round(Math.random() * 6)];
 
   beforeEach(() => {
-    vi.mock('next/navigation', () => ({
-      useSearchParams: () => new URLSearchParams('test=example'),
-    }));
     render(
       <StoreProvider>
-        <CharacterCard character={mockCharacter} />
+        <MemoryRouter>
+          <CharacterCard character={mockCharacter} />
+        </MemoryRouter>
       </StoreProvider>
     );
   });
   afterEach(() => {
-    vi.resetAllMocks();
     cleanup();
   });
 
   it('renders character image with correct attributes', () => {
     const image = screen.getByRole('img') as HTMLImageElement;
-    expect(image).toHaveAttribute('src');
-    expect(image.src).toContain(encodeURIComponent(mockCharacter.image));
+    expect(image).toHaveAttribute('src', mockCharacter.image);
     expect(image).toHaveAttribute('alt', mockCharacter.name);
   });
 

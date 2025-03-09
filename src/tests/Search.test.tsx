@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import Search, { LOCAL_STORAGE_KEY } from 'components/home/Search';
 import { MockInstance } from 'vitest';
 
-vi.mock('next/navigation', () => ({
-  useSearchParams: () => new URLSearchParams('test=example'),
+vi.mock('react-router', () => ({
+  useSearchParams: () => [new URLSearchParams('test=example')],
 }));
 
 describe('Search Component', () => {

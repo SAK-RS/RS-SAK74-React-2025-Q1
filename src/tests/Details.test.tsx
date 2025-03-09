@@ -10,12 +10,10 @@ import * as apiSlice from 'store/apiSlice';
 
 const queryMock = spyOn(apiSlice, 'useGetCharacterByIdQuery');
 
-const mockedRouterPushFn = vi.hoisted(() => vi.fn());
-vi.mock('next/navigation', () => ({
-  useRouter() {
-    return { push: mockedRouterPushFn, refresh: vi.fn() };
-  },
-  useSearchParams: () => new URLSearchParams('search=example'),
+const mockedCloseFn = vi.hoisted(() => vi.fn());
+
+vi.mock('react-router', () => ({
+  useOutletContext: () => ({ onCloseDetails: mockedCloseFn }),
 }));
 
 describe('Details', () => {
@@ -62,7 +60,7 @@ describe('Details', () => {
 
     const closeButton = await screen.findByRole('button');
     closeButton.click();
-    expect(mockedRouterPushFn).toHaveBeenCalled();
+    expect(mockedCloseFn).toHaveBeenCalled();
   });
 
   it('query should be called with appropriate param', () => {

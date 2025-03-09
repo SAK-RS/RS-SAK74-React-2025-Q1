@@ -18,6 +18,7 @@ export default defineConfig({
         '**/Footer.tsx',
         '**/app/**',
         '**/StoreProvider*',
+        '**/pages/**',
       ],
       clean: true,
     },

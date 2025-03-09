@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { vi } from 'vitest';
 import RootLayout from 'components/RootLayout';
 import * as ThemeProvider from 'components/ThemeProvider';
 import Header from 'components/Header';

@@ -1,5 +1,4 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-// import { HYDRATE } from 'next-redux-wrapper';
 import type { TypedState } from 'store';
 import type { Character } from 'types';
 
@@ -13,14 +12,6 @@ export const selectedCharacters = createSlice({
     removeFromSelected: selectedCharactersAdapter.removeOne,
     unselectAll: selectedCharactersAdapter.removeAll,
   },
-  // extraReducers: (builder) => {
-  //   builder.addCase(HYDRATE, (state, action) => {
-  //     return {
-  //       ...state,
-  //       ...action['payload']['selected-characters'],
-  //     };
-  //   });
-  // },
 });
 
 export const { addToSelected, removeFromSelected, unselectAll } =
