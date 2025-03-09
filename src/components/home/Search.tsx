@@ -1,7 +1,6 @@
 'use client';
 
 import Button from 'components/Button';
-import { useSearchParams } from 'next/navigation';
 import {
   useEffect,
   useState,
@@ -12,16 +11,14 @@ import {
 
 export const LOCAL_STORAGE_KEY = '__search';
 
-const Search: FC = () => {
+const Search: FC<{ search?: string }> = ({ search }) => {
   const [inputValue, setInputValue] = useState('');
   useEffect(() => {
     setInputValue(window.localStorage.getItem(LOCAL_STORAGE_KEY) || '');
   }, []);
 
-  const searchParams = useSearchParams();
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = (ev) => {
-    if (inputValue === searchParams.get('search')) {
+    if (inputValue === search) {
       ev.preventDefault();
       return;
     }
