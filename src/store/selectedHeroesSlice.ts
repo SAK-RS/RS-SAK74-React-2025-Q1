@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import { TypedState } from 'store';
-import { Character } from 'types';
+import type { TypedState } from 'store';
+import type { Character } from 'types';
 
 const selectedCharactersAdapter = createEntityAdapter<Character>();
 
@@ -22,6 +22,10 @@ export const {
   selectById: selectSelectedCharacterById,
   selectIds: selectSelectedCharactersIds,
   selectTotal: selectedAmount,
-} = selectedCharactersAdapter.getSelectors<TypedState>(
-  (state) => state['selected-characters']
-);
+} = selectedCharactersAdapter.getSelectors<
+  TypedState & {
+    'selected-characters': ReturnType<
+      typeof selectedCharactersAdapter.getInitialState
+    >;
+  }
+>((state) => state['selected-characters']);

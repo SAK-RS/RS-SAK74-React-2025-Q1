@@ -24,3 +24,10 @@ dist-ssr
 *.sw?
 
 coverage
+.next
+.vercel
+src/_pages/**
+
+/.react-router/
+_app
+.vercel

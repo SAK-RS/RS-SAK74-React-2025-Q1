@@ -1,18 +1,18 @@
 import { useNavigate } from 'react-router';
 
-const ExamplePage = () => {
+export default function Page() {
   const navigate = useNavigate();
-  const onClick = () => {
-    navigate(-1);
-  };
   return (
-    <>
-      <h1>Here you are...</h1>
-      <button className="cursor-pointer" onClick={onClick}>
+    <main>
+      <h1>Test page</h1>
+      <button
+        onClick={() => {
+          navigate(-1);
+        }}
+        className="cursor-pointer"
+      >
         Go back
       </button>
-    </>
+    </main>
   );
-};
-
-export default ExamplePage;
+}

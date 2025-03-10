@@ -1,4 +1,4 @@
-import { MouseEventHandler, useRef, type FC } from 'react';
+import { HTMLAttributes, MouseEventHandler, useRef, type FC } from 'react';
 import { useStateSelector, useTypedDispatch } from 'store';
 import {
   selectAllSelectedCharacters,
@@ -6,7 +6,9 @@ import {
 } from 'store/selectedHeroesSlice';
 import generateCSV_URL from 'utils/csvContent';
 
-const MenuSelected: FC<{ quantity: number }> = ({ quantity }) => {
+const MenuSelected: FC<
+  { quantity: number } & HTMLAttributes<HTMLDivElement>
+> = ({ quantity, ...restProps }) => {
   const allSelected = useStateSelector(selectAllSelectedCharacters);
   const isMoreThan_1 = quantity > 1;
   const dispatch = useTypedDispatch();
@@ -39,7 +41,10 @@ const MenuSelected: FC<{ quantity: number }> = ({ quantity }) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   return (
-    <div className="fixed left-2 bottom-2 w-[35vw] h-20 bg-green-500 rounded-md animate-fade">
+    <div
+      className="fixed left-2 bottom-2 w-[35vw] h-20 bg-green-500 rounded-md animate-fade"
+      {...restProps}
+    >
       <h5>
         {quantity} item{isMoreThan_1 && 's'} {!isMoreThan_1 ? 'is' : 'are'}{' '}
         selected

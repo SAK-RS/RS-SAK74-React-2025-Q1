@@ -25,7 +25,9 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
       <img
         src={character.image}
         alt={character.name}
-        className="w-24 h-24 rounded-full mb-4"
+        width={96}
+        height={96}
+        className="rounded-full mb-4"
         loading="lazy"
       />
       <h2 className="text-xl font-bold mb-2">{character.name}</h2>
@@ -43,16 +45,19 @@ const CharacterCard: FC<{ character: Character }> = ({ character }) => {
           <strong>Gender:</strong> {character.gender}
         </p>
       </div>
-      <div className="flex justify-between w-full ">
+      <div
+        className="flex justify-between w-full"
+        onClick={(ev) => {
+          ev.stopPropagation();
+        }}
+      >
         <Link
           className="underline text-blue-400 italic hover:not-italic hover:font-semibold"
           to={{
-            pathname: `details/${character.id}`,
+            pathname: `/search/${character.id}`,
             search: searchParams.toString(),
           }}
-          onClick={(ev) => {
-            ev.stopPropagation();
-          }}
+          preventScrollReset
         >
           View details
         </Link>

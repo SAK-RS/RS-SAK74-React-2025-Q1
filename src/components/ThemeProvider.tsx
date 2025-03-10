@@ -1,7 +1,7 @@
 import {
   createContext,
-  Dispatch,
-  SetStateAction,
+  type Dispatch,
+  type SetStateAction,
   use,
   useEffect,
   useState,
@@ -17,13 +17,13 @@ export type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 const ThemeProvider: FC<PropsWithChildren> = ({ children }) => {
-  const matchDark = matchMedia('(prefers-color-scheme: dark)');
-
-  const [isDark, setDark] = useState(() => matchDark.matches);
+  const [isDark, setDark] = useState(false);
   function listener(this: MediaQueryList) {
     setDark(this.matches);
   }
   useEffect(() => {
+    const matchDark = matchMedia('(prefers-color-scheme: dark)');
+    setDark(matchDark.matches);
     matchDark.addEventListener('change', listener);
     return () => {
       matchDark.removeEventListener('change', listener);

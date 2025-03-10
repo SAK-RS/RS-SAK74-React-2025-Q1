@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL, SearchType } from 'api';
-import { CharacterResponse } from 'api';
-import { Character } from 'types';
+import { API_URL, type CharacterResponse, type SearchType } from 'api';
+import type { Character } from 'types';
 
 export const charactersApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL,
     timeout: 3000,
   }),
+
   endpoints: (builder) => ({
     getCharacters: builder.query<
       CharacterResponse,
@@ -42,9 +42,6 @@ export const charactersApi = createApi({
   }),
 });
 
-export const { useGetCharactersQuery, useGetCharacterByIdQuery } =
-  charactersApi;
-
 function isPredefinedError(err: unknown): err is { error: string } {
   return typeof err === 'object' && err !== null && 'error' in err;
 }
@@ -52,3 +49,11 @@ function isPredefinedError(err: unknown): err is { error: string } {
 function isString(data: unknown): data is string {
   return typeof data === 'string';
 }
+
+export const {
+  useGetCharactersQuery,
+  useGetCharacterByIdQuery,
+  util: { getRunningQueriesThunk },
+} = charactersApi;
+
+export const { getCharacters, getCharacterById } = charactersApi.endpoints;

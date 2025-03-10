@@ -1,10 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import CharacterCard from 'components/home/CharacterCard';
-import { Character } from 'types';
+import type { Character } from 'types';
 import { results } from 'tests/mock/data.json';
-import { Provider } from 'react-redux';
-import { store } from 'store';
+import StoreProvider from 'components/StoreProvider';
 import { MemoryRouter } from 'react-router';
 
 describe('CharacterCard', () => {
@@ -12,16 +11,19 @@ describe('CharacterCard', () => {
 
   beforeEach(() => {
     render(
-      <Provider store={store}>
+      <StoreProvider>
         <MemoryRouter>
           <CharacterCard character={mockCharacter} />
         </MemoryRouter>
-      </Provider>
+      </StoreProvider>
     );
+  });
+  afterEach(() => {
+    cleanup();
   });
 
   it('renders character image with correct attributes', () => {
-    const image = screen.getByRole('img');
+    const image = screen.getByRole('img') as HTMLImageElement;
     expect(image).toHaveAttribute('src', mockCharacter.image);
     expect(image).toHaveAttribute('alt', mockCharacter.name);
   });

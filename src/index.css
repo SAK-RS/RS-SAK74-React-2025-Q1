@@ -12,10 +12,20 @@
 @theme {
   --color-primary: blue;
   --animate-fade: fade 1s ease-in-out forwards;
+  --animate-acordeon: acordeon 0.5s ease-in-out forwards;
 }
 
 @keyframes zoom {
   from {
+  }
+}
+
+@keyframes acordeon {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 
@@ -38,7 +48,11 @@
 }
 
 body {
-  margin: 0;
+  margin: 0 auto;
   min-width: 320px;
   min-height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

@@ -7,6 +7,8 @@ import * as storeModule from 'store';
 import { results } from './mock/data.json';
 const mockedCharacter = results[Math.round(Math.random() * 6)];
 
+const store = storeModule.makeStore();
+
 vi.mock('../utils/csvContent', () => ({
   default: vi.fn(),
 }));
@@ -15,9 +17,7 @@ const user = userEvent.setup();
 describe('Menu of selected', () => {
   beforeEach(() => {
     render(<MenuSelected quantity={2} />, {
-      wrapper: ({ children }) => (
-        <Provider store={storeModule.store}>{children}</Provider>
-      ),
+      wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
     vi.restoreAllMocks();
   });
@@ -57,7 +57,7 @@ describe('Menu of selected', () => {
     expect(unselectBtn).toBeInTheDocument();
     await user.click(unselectBtn);
 
-    const selectedArr = storeModule.store.getState()['selected-characters'].ids;
+    const selectedArr = store.getState()['selected-characters'].ids;
 
     expect(selectedArr).toHaveLength(0);
   });

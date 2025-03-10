@@ -1,43 +1,57 @@
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Search from 'components/home/Search';
+import Search, { LOCAL_STORAGE_KEY } from 'components/home/Search';
 import { MockInstance } from 'vitest';
 
-describe('Search Component', () => {
-  const defaultProps = {
-    value: '',
-    onSubmit: vi.fn(),
-  };
+vi.mock('react-router', () => ({
+  useSearchParams: () => [new URLSearchParams('test=example')],
+}));
 
-  let storageSpy: MockInstance;
+describe('Search Component', () => {
+  let setStorageSpy: MockInstance;
+  let getStorageSpy: MockInstance;
 
   beforeEach(() => {
-    storageSpy = vi.spyOn(localStorage.__proto__, 'setItem');
+    setStorageSpy = vi.spyOn(localStorage.__proto__, 'setItem');
+    getStorageSpy = vi
+      .spyOn(localStorage.__proto__, 'getItem')
+      .mockReturnValue('initial');
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    cleanup();
   });
-  it('renders with initial value', () => {
-    render(<Search {...defaultProps} value="initial" />);
-    expect(screen.getByPlaceholderText('Search')).toHaveValue('initial');
+  it('renders with initial value', async () => {
+    render(<Search />);
+    const input = await screen.findByPlaceholderText('Search');
+    await waitFor(() => {
+      expect(getStorageSpy).toHaveBeenCalled();
+      expect(input).toHaveValue('initial');
+    });
   });
 
   it('updates input value on change', async () => {
-    render(<Search {...defaultProps} />);
+    render(<Search />);
     const input = screen.getByRole('textbox');
+    await userEvent.clear(input);
     await userEvent.type(input, 'test search');
     expect(input).toHaveValue('test search');
   });
 
   it('calls onSubmit with input value on form submission', async () => {
-    render(<Search {...defaultProps} />);
+    render(<Search />);
     const input = screen.getByRole('textbox');
 
+    await userEvent.clear(input);
+
     await userEvent.type(input, 'test search');
+
     await userEvent.click(screen.getByRole('button', { name: 'Search' }));
 
-    expect(defaultProps.onSubmit).toHaveBeenCalledWith('test search');
-    expect(storageSpy).toHaveBeenCalledOnce();
+    expect(setStorageSpy).toHaveBeenCalledWith(
+      LOCAL_STORAGE_KEY,
+      'test search'
+    );
   });
 });

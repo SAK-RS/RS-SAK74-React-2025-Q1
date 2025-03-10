@@ -2,29 +2,21 @@ import { type FC, useEffect, useState } from 'react';
 import CharacterCard from './CharacterCard';
 import Spinner from 'components/Spinner';
 import Pagination from './Pagination';
-import {
-  Link,
-  Outlet,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from 'react-router';
 import { useGetCharactersQuery } from 'store/apiSlice';
 import { useStateSelector } from 'store';
 import { selectedAmount } from 'store/selectedHeroesSlice';
 import SearchError from './SearchError';
 import MenuSelected from './MenuOfSelected';
 import Modal from 'components/Modal';
+import { Link, useNavigate } from 'react-router';
 
-interface ResultsProps {
-  search: string;
-}
+type ResultsProps = {
+  search?: string;
+  page?: number;
+};
 
-const Results: FC<ResultsProps> = ({ search }) => {
-  const [page, setPage] = useState(1);
+const Results: FC<ResultsProps> = ({ search, page = 1 }) => {
   const [totalPages, setTotalPages] = useState(1);
-
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const { data, isError, error, isLoading, isSuccess, isFetching } =
     useGetCharactersQuery({
@@ -38,80 +30,60 @@ const Results: FC<ResultsProps> = ({ search }) => {
     }
   }, [data, isSuccess]);
 
+  const [isSSR, setIsSSR] = useState(true);
   useEffect(() => {
-    setSearchParams({ searchPage: page.toString() });
-  }, [page]);
-
-  useEffect(() => {
-    if (page !== 1) {
-      setPage(1);
-    }
-  }, [search]);
-
-  const navigate = useNavigate();
-
-  const location = useLocation();
-
-  const closeDetails = () => {
-    navigate({ pathname: '/search', search: searchParams.toString() });
-  };
+    setIsSSR(false);
+  }, []);
 
   const selectedLenght = useStateSelector(selectedAmount);
 
+  const navigate = useNavigate();
+
+  const onPageChange = (page: number) => {
+    navigate({ search: `search=${search ?? ''}&page=${page}` });
+  };
+
   return (
-    <div className="my-6">
+    <>
+      {(isLoading || isFetching) && isSSR && (
+        <Spinner size="large" className="my-4" />
+      )}
+
       {isError && <SearchError error={error} />}
       {isSuccess && (
-        <div
-          className="flex justify-between"
-          onClick={() => {
-            if (location.pathname !== '/search') {
-              closeDetails();
-            }
-          }}
-        >
-          <div className="flex flex-col">
-            <div className="flex justify-between">
-              <Pagination
-                className="self-start mb-4 ml-4"
-                page={page}
-                totalPages={totalPages}
-                setPage={(page) => {
-                  setPage(page);
-                }}
-              />
-              <Link
-                to="../example"
-                onClick={(ev) => {
-                  ev.stopPropagation();
-                }}
-                className="mr-4"
-              >
-                Go to another page
-              </Link>
-            </div>
-
-            <div
-              className="flex flex-wrap gap-4 justify-around"
-              data-testid="list"
-            >
-              {data.results.map((character) => (
-                <CharacterCard key={character.id} character={character} />
-              ))}
-            </div>
+        <div className="flex flex-col">
+          <div className="flex justify-between">
             <Pagination
-              className="self-end mt-4 mr-4"
+              className="self-start mb-4 ml-4"
               page={page}
               totalPages={totalPages}
-              setPage={(page) => {
-                setPage(page);
-              }}
+              setPage={onPageChange}
             />
+            <Link
+              to={'/example'}
+              onClick={(ev) => {
+                ev.stopPropagation();
+              }}
+              className="mr-4"
+            >
+              Go to another page
+            </Link>
           </div>
-          <Outlet context={{ closeDetails }} />
-          {Boolean(selectedLenght) && (
-            <MenuSelected quantity={selectedLenght} />
-          )}
+
+          <div
+            className="flex flex-wrap gap-4 justify-around"
+            data-testid="list"
+          >
+            {data.results.map((character) => (
+              <CharacterCard key={character.id} character={character} />
+            ))}
+          </div>
+          <Pagination
+            className="self-end mt-4 mr-4"
+            page={page}
+            totalPages={totalPages}
+            setPage={onPageChange}
+          />
         </div>
       )}
 
@@ -120,7 +92,15 @@ const Results: FC<ResultsProps> = ({ search }) => {
           <Spinner size="large" />
         </Modal>
       )}
-    </div>
+      {Boolean(selectedLenght) && (
+        <MenuSelected
+          quantity={selectedLenght}
+          onClick={(ev) => {
+            ev.stopPropagation();
+          }}
+        />
+      )}
+    </>
   );
 };
 

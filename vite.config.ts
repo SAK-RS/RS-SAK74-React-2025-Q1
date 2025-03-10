@@ -1,16 +1,12 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
-import tsConfigPaths from 'vite-tsconfig-paths';
+import { reactRouter } from '@react-router/dev/vite';
 import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-import { BASE_URL } from './base';
-
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tsConfigPaths(), tailwindcss()],
+  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   server: {
     host: true,
     port: 3000,
   },
-  base: BASE_URL,
 });
