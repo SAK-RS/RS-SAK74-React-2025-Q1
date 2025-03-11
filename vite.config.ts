@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import tsConfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+import { BASE_URL } from './base';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,4 +11,5 @@ export default defineConfig({
     host: true,
     port: 3000,
   },
+  base: BASE_URL,
 });
