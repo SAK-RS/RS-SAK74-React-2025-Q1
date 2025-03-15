@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import Button from 'components/ui/Button';
+import Input from 'components/ui/Input';
 import { ALLOWED_COUNTRIES } from 'form_setup';
 import { useState } from 'react';
 import {
@@ -15,7 +17,7 @@ const Form = () => {
 
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid, isValidating },
     handleSubmit,
     setValue,
   } = useForm({
@@ -49,33 +51,40 @@ const Form = () => {
       <form
         onSubmit={handleSubmit(onValid, onErrors)}
         className="flex flex-col gap-2"
+        noValidate
       >
-        <label>
-          Name
-          <input {...register('name')} />
-          <div className="">{errors.name?.message}</div>
-        </label>
-        <label className="">
-          Age
-          <input type="number" {...register('age')} />
-          <div className="">{errors.age?.message}</div>
-        </label>
-        <label>
-          Email
-          <input {...register('email')} />
-          <div className="">{errors.email?.message}</div>
-        </label>
+        <Input
+          label="Name"
+          {...register('name')}
+          error={errors.name?.message}
+        />
 
-        <label>
-          Password
-          <input type="password" {...register('password')} />
-          <div className="">{errors.password?.message}</div>
-        </label>
-        <label>
-          Confirm Password
-          <input type="password" {...register('confirmPassword')} />
-          <div className="">{errors.confirmPassword?.message}</div>
-        </label>
+        <Input
+          label="Age"
+          type="number"
+          {...register('age')}
+          error={errors.age?.message}
+        />
+
+        <Input
+          label="Email"
+          {...register('email')}
+          type="email"
+          error={errors.email?.message}
+        />
+
+        <Input
+          label="Password"
+          {...register('password')}
+          type="password"
+          error={errors.password?.message}
+        />
+        <Input
+          label="confirmPassword"
+          {...register('confirmPassword')}
+          type="password"
+          error={errors.confirmPassword?.message}
+        />
 
         <fieldset>
           <legend>Gender</legend>
@@ -90,51 +99,47 @@ const Form = () => {
           <div className="">{errors.gender?.message}</div>
         </fieldset>
 
-        <label>
-          Accept terms and conditions
-          <input type="checkbox" {...register('accept')} />
-          <div className="">{errors.accept?.message}</div>
-        </label>
+        <Input
+          label="Accept terms and conditions"
+          type="checkbox"
+          {...register('accept')}
+          error={errors.accept?.message}
+        />
 
         {/* picture */}
-        <label>
-          Picture
-          <input
-            type="file"
-            {...restPictureProps}
-            onChange={(ev) => {
-              formPictureOnChange(ev);
-              const file = ev.target.files?.[0];
-              if (!file) {
-                return;
-              }
-              if (image) {
-                URL.revokeObjectURL(image);
-              }
-              setImage(URL.createObjectURL(file));
-            }}
-          />
-          <div className="">{errors.picture?.message}</div>
-        </label>
+        <Input
+          label="Picture"
+          type="file"
+          {...restPictureProps}
+          onChange={(ev) => {
+            formPictureOnChange(ev);
+            const file = ev.target.files?.[0];
+            if (!file) {
+              return;
+            }
+            if (image) {
+              URL.revokeObjectURL(image);
+            }
+            setImage(URL.createObjectURL(file));
+          }}
+          error={errors.picture?.message}
+        />
 
         {/* country */}
-        <label>
-          Select country
-          <span className="relative ">
-            <input
-              type="text"
-              {...register('country')}
-              placeholder="Type to search..."
-              onChange={(ev) => {
-                const value = ev.target.value;
-                setFilteredCountries(
-                  ALLOWED_COUNTRIES.filter((country) =>
-                    country.toLowerCase().includes(value.toLowerCase())
-                  )
-                );
-              }}
-            />
-            <div>{errors.country?.message}</div>
+        <Input
+          label="Select country"
+          {...register('country')}
+          error={errors.country?.message}
+          placeholder="Type to search..."
+          onChange={(ev) => {
+            const value = ev.target.value;
+            setFilteredCountries(
+              ALLOWED_COUNTRIES.filter((country) =>
+                country.toLowerCase().includes(value.toLowerCase())
+              )
+            );
+          }}
+          menuOptions={
             <ul>
               {filteredCountries.map((country) => (
                 <li
@@ -149,10 +154,12 @@ const Form = () => {
                 </li>
               ))}
             </ul>
-          </span>
-        </label>
+          }
+        />
 
-        <button type="submit">Submit</button>
+        <Button type="submit" disabled={!isValid || isValidating}>
+          Submit
+        </Button>
       </form>
       <img src={image} alt="" width={100} />
       <button

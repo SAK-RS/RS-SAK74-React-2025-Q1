@@ -80,10 +80,6 @@ export const formSchema = z
     ),
   })
   .strict()
-  // .refine((data) => {
-  //   console.log('Refine global: ', data);
-  //   return true;
-  // })
   .refine(
     (data) => {
       return data.password === data.confirmPassword;
@@ -95,4 +91,4 @@ export const formSchema = z
   );
 
 export type FormType = z.infer<typeof formSchema>;
-export type FormDataType = Omit<FormType, 'confirmPassword'>;
+export type FormDataType = Omit<FormType, 'confirmPassword' | 'accept'>;
