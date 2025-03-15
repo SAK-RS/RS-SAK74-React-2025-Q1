@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@layer components {
+  input + div {
+    @apply h-6 text-red-500;
+  }
+}
