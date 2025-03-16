@@ -1,15 +1,21 @@
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
-import { ALLOWED_COUNTRIES } from 'form_setup';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { formSchema, FormType } from 'schemas';
+import { useStateSelector, useTypedDispatch } from 'store';
+import { selectAllowedCountries } from 'store/allowedCountries.slice';
+import { addEntry } from 'store/formsData.slice';
 
 const Form = () => {
   const navigate = useNavigate();
+  const allowedCountries = useStateSelector(selectAllowedCountries);
+  const dispatch = useTypedDispatch();
 
   const [errors, setErrors] =
     useState<{ [key in keyof FormType]: string | undefined }>();
+
+  const imageRef = useRef<HTMLImageElement | null>(null);
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
@@ -24,6 +30,9 @@ const Form = () => {
       setErrors(undefined);
       console.log('Submited!!!');
       console.log(result.data);
+      const { accept, confirmPassword, ...dataToStore } = result.data; //eslint-disable-line @typescript-eslint/no-unused-vars
+      dispatch(addEntry({ ...dataToStore, timeStamp: Date.now() }));
+      navigate('/view');
     } else {
       console.log('Errors');
       console.log(result.error.errors);
@@ -132,17 +141,10 @@ const Form = () => {
           }}
         />
 
-        {/* country */}
-        {/* <Input
-          label="Select country"
-          onChange={(ev) => {
-            const value = ev.target.value;
-          }}
-        /> */}
         <label>
           <select name="country">
             <option value="Not allowed Country"></option>
-            {ALLOWED_COUNTRIES.map((country) => (
+            {allowedCountries.map((country) => (
               <option key={country} value={country}>
                 {country}
               </option>
@@ -153,7 +155,8 @@ const Form = () => {
 
         <Button type="submit">Submit</Button>
       </form>
-      {JSON.stringify(errors)}
+      {/* {JSON.stringify(errors)} */}
+      <img ref={imageRef} />
       <button
         onClick={() => {
           navigate(-1);

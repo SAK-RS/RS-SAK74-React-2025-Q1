@@ -91,4 +91,6 @@ export const formSchema = z
   );
 
 export type FormType = z.infer<typeof formSchema>;
-export type FormDataType = Omit<FormType, 'confirmPassword' | 'accept'>;
+export type FormDataType = Omit<FormType, 'confirmPassword' | 'accept'> & {
+  timeStamp: number;
+};

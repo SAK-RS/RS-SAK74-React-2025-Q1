@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
-import { ALLOWED_COUNTRIES } from 'form_setup';
+// import { ALLOWED_COUNTRIES } from 'form_setup';
 import { useState } from 'react';
 import {
   type SubmitHandler,
@@ -10,10 +10,15 @@ import {
 } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { formSchema, FormType } from 'schemas';
+import { useStateSelector, useTypedDispatch } from 'store';
+import { selectAllowedCountries } from 'store/allowedCountries.slice';
+import { addEntry } from 'store/formsData.slice';
 import 'styles/form.css';
 
 const Form = () => {
   const navigate = useNavigate();
+  const allowedCountries = useStateSelector(selectAllowedCountries);
+  const dispatch = useTypedDispatch();
 
   const {
     register,
@@ -29,6 +34,9 @@ const Form = () => {
   const onValid: SubmitHandler<FormType> = (data) => {
     console.log('Submited!!!');
     console.log(data);
+    const { accept, confirmPassword, ...dataToStore } = data; //eslint-disable-line @typescript-eslint/no-unused-vars
+    dispatch(addEntry({ ...dataToStore, timeStamp: Date.now() }));
+    navigate('/view');
   };
 
   const onErrors: SubmitErrorHandler<FormType> = (errors) => {
@@ -134,7 +142,7 @@ const Form = () => {
           onChange={(ev) => {
             const value = ev.target.value;
             setFilteredCountries(
-              ALLOWED_COUNTRIES.filter((country) =>
+              allowedCountries.filter((country) =>
                 country.toLowerCase().includes(value.toLowerCase())
               )
             );
