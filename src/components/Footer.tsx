@@ -14,10 +14,9 @@ export default function Footer() {
     >
       <img
         src="https://old.rs.school/images/rs_school.svg"
-        width={96}
         alt="rs-logo"
+        width={100}
       />
-
       <strong className="space-x-2">
         <a href="https://github.com/SAK-RS">SAK74 ©</a>
 

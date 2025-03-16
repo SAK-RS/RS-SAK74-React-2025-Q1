@@ -1,0 +1,8 @@
+@layer components {
+  .error {
+    @apply text-error italic text-sm h-5;
+  }
+  .form {
+    @apply flex flex-col items-start p-4 max-w-min mx-auto;
+  }
+}

@@ -1,21 +1,14 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
-import { charactersApi } from './apiSlice';
+import allowedCountriesSlice from './allowedCountries.slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectedCharacters } from './selectedHeroesSlice';
+import formDataSlice from './formsData.slice';
 
-const reducer = combineSlices(charactersApi, selectedCharacters);
+export const store = configureStore({
+  reducer: combineSlices(allowedCountriesSlice, formDataSlice),
+});
 
-export const makeStore = () =>
-  configureStore({
-    reducer,
-    middleware(getDefaultMiddleware) {
-      return getDefaultMiddleware().concat(charactersApi.middleware);
-    },
-  });
+export type TypedStore = ReturnType<typeof store.getState>;
 
-export type TypedState = ReturnType<typeof makeStore>;
+export const useStateSelector = useSelector.withTypes<TypedStore>();
 
-export const useStateSelector = useSelector.withTypes<TypedState>();
-
-export const useTypedDispatch =
-  useDispatch.withTypes<ReturnType<typeof makeStore>['dispatch']>();
+export const useTypedDispatch = useDispatch.withTypes<typeof store.dispatch>();
