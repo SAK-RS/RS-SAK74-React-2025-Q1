@@ -18,7 +18,7 @@ const Input: FC<InputHTMLAttributes<HTMLInputElement> & InputPropsType> = ({
       <div className="relative">
         <input {...inputProps} />
         <div>{error}</div>
-        <div className="">{menuOptions}</div>
+        {menuOptions && <div className="">{menuOptions}</div>}
       </div>
     </label>
   );
