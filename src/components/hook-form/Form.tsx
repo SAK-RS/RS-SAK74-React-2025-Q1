@@ -1,19 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
-// import { ALLOWED_COUNTRIES } from 'form_setup';
+import { allowedPictureTypes } from 'form_setup';
 import { useState } from 'react';
-import {
-  type SubmitHandler,
-  type SubmitErrorHandler,
-  useForm,
-} from 'react-hook-form';
+import { type SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { formSchema, FormType } from 'schemas';
 import { useStateSelector, useTypedDispatch } from 'store';
 import { selectAllowedCountries } from 'store/allowedCountries.slice';
 import { addEntry } from 'store/formsData.slice';
-import 'styles/form.css';
 
 const Form = () => {
   const navigate = useNavigate();
@@ -25,6 +20,7 @@ const Form = () => {
     formState: { errors, isValid, isValidating },
     handleSubmit,
     setValue,
+    reset,
   } = useForm({
     resolver: zodResolver(formSchema, { async: true }),
     mode: 'all',
@@ -32,16 +28,9 @@ const Form = () => {
   });
 
   const onValid: SubmitHandler<FormType> = (data) => {
-    console.log('Submited!!!');
-    console.log(data);
     const { accept, confirmPassword, ...dataToStore } = data; //eslint-disable-line @typescript-eslint/no-unused-vars
     dispatch(addEntry({ ...dataToStore, timeStamp: Date.now() }));
     navigate('/view');
-  };
-
-  const onErrors: SubmitErrorHandler<FormType> = (errors) => {
-    console.log('Errors');
-    console.log(errors);
   };
 
   const [image, setImage] = useState<string | undefined>();
@@ -56,13 +45,23 @@ const Form = () => {
   return (
     <>
       <h1>Hook form</h1>
+      <button
+        className="cursor-pointer float-right mr-4"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        Go back
+      </button>
       <form
-        onSubmit={handleSubmit(onValid, onErrors)}
-        className="flex flex-col gap-2"
+        onSubmit={handleSubmit(onValid)}
+        className="form"
         noValidate
+        autoComplete="off"
       >
         <Input
           label="Name"
+          placeholder="Name"
           {...register('name')}
           error={errors.name?.message}
         />
@@ -70,6 +69,7 @@ const Form = () => {
         <Input
           label="Age"
           type="number"
+          placeholder="Age"
           {...register('age')}
           error={errors.age?.message}
         />
@@ -78,6 +78,7 @@ const Form = () => {
           label="Email"
           {...register('email')}
           type="email"
+          placeholder="E-mail"
           error={errors.email?.message}
         />
 
@@ -85,25 +86,31 @@ const Form = () => {
           label="Password"
           {...register('password')}
           type="password"
+          placeholder="Password"
           error={errors.password?.message}
         />
         <Input
           label="confirmPassword"
           {...register('confirmPassword')}
           type="password"
+          placeholder="Confirm your password"
           error={errors.confirmPassword?.message}
         />
 
-        <fieldset>
+        <fieldset className="flex gap-8 px-4">
           <legend>Gender</legend>
-          <label>
-            Male
-            <input type="radio" {...register('gender')} value={'male'} />
-          </label>
-          <label>
-            Female
-            <input type="radio" {...register('gender')} value={'female'} />
-          </label>
+          <Input
+            label="Male"
+            type="radio"
+            {...register('gender')}
+            value={'male'}
+          />
+          <Input
+            label="Female"
+            type="radio"
+            {...register('gender')}
+            value={'female'}
+          />
           <div className="">{errors.gender?.message}</div>
         </fieldset>
 
@@ -115,23 +122,46 @@ const Form = () => {
         />
 
         {/* picture */}
-        <Input
-          label="Picture"
-          type="file"
-          {...restPictureProps}
-          onChange={(ev) => {
-            formPictureOnChange(ev);
-            const file = ev.target.files?.[0];
-            if (!file) {
-              return;
-            }
-            if (image) {
-              URL.revokeObjectURL(image);
-            }
-            setImage(URL.createObjectURL(file));
-          }}
-          error={errors.picture?.message}
-        />
+        <div>
+          <Input
+            label="Picture"
+            type="file"
+            {...restPictureProps}
+            onChange={(ev) => {
+              formPictureOnChange(ev);
+              const file = ev.target.files?.[0];
+              if (!file) {
+                return;
+              }
+              if (image) {
+                URL.revokeObjectURL(image);
+              }
+              if (!allowedPictureTypes.types.includes(file.type)) {
+                setImage(undefined);
+              } else {
+                setImage(URL.createObjectURL(file));
+              }
+            }}
+            error={errors.picture?.message}
+          />
+          {image && (
+            <div className="rounded-lg w-36 relative">
+              <img src={image} width={144} />
+              <button
+                title="Remove"
+                onClick={() => {
+                  setValue('picture', {} as FormType['picture'], {
+                    shouldValidate: true,
+                  });
+                  setImage(undefined);
+                }}
+                className="absolute -right-2 -top-2 rounded-full border-2 border-error cursor-pointer bg-gray-400"
+              >
+                ❌
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* country */}
         <Input
@@ -152,7 +182,7 @@ const Form = () => {
               {filteredCountries.map((country) => (
                 <li
                   key={country}
-                  className="p-2 hover:bg-gray-200 cursor-pointer"
+                  className="p-2 hover:bg-gray-300 dark:hover:bg-gray-700 cursor-pointer"
                   onClick={() => {
                     setValue('country', country, { shouldValidate: true });
                     setFilteredCountries([]);
@@ -164,19 +194,22 @@ const Form = () => {
             </ul>
           }
         />
-
-        <Button type="submit" disabled={!isValid || isValidating}>
-          Submit
-        </Button>
+        <div className="w-full inline-flex justify-between">
+          <Button
+            variant="warn"
+            type="button"
+            onClick={() => {
+              reset();
+              setImage(undefined);
+            }}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={!isValid || isValidating}>
+            Submit
+          </Button>
+        </div>
       </form>
-      <img src={image} alt="" width={100} />
-      <button
-        onClick={() => {
-          navigate(-1);
-        }}
-      >
-        Go back
-      </button>
     </>
   );
 };

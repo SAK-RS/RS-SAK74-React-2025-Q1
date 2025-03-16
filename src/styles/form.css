@@ -1,7 +1,8 @@
-@import 'tailwindcss';
-
 @layer components {
-  input + div {
-    @apply h-6 text-red-500;
+  .error {
+    @apply text-error italic text-sm h-5;
+  }
+  .form {
+    @apply flex flex-col items-start p-4 max-w-min mx-auto;
   }
 }

@@ -29,7 +29,7 @@ const passwordSchema = withDigit
   .and(withLowerCase);
 
 const fileSchema = z.unknown().refine((file) => file instanceof File, {
-  message: 'File must be an instance of File',
+  message: 'Picture is required',
 });
 
 export const formSchema = z

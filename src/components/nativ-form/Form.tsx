@@ -1,8 +1,9 @@
 import Button from 'components/ui/Button';
 import Input from 'components/ui/Input';
-import { FormEventHandler, useRef, useState } from 'react';
+import { allowedPictureTypes } from 'form_setup';
+import { type FormEventHandler, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { formSchema, FormType } from 'schemas';
+import { formSchema, type FormType } from 'schemas';
 import { useStateSelector, useTypedDispatch } from 'store';
 import { selectAllowedCountries } from 'store/allowedCountries.slice';
 import { addEntry } from 'store/formsData.slice';
@@ -14,28 +15,21 @@ const Form = () => {
 
   const [errors, setErrors] =
     useState<{ [key in keyof FormType]: string | undefined }>();
-
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  const [image, setImage] = useState<string | undefined>();
 
   const onSubmit: FormEventHandler<HTMLFormElement> = async (ev) => {
     ev.preventDefault();
     const values = Object.fromEntries(new FormData(ev.currentTarget).entries());
-    console.log({ values });
     const result = await formSchema.safeParseAsync({
       ...values,
       accept: values.accept === 'on',
     });
-    console.log({ result });
     if (result.success) {
       setErrors(undefined);
-      console.log('Submited!!!');
-      console.log(result.data);
       const { accept, confirmPassword, ...dataToStore } = result.data; //eslint-disable-line @typescript-eslint/no-unused-vars
       dispatch(addEntry({ ...dataToStore, timeStamp: Date.now() }));
       navigate('/view');
     } else {
-      console.log('Errors');
-      console.log(result.error.errors);
       setErrors(() => {
         return result.error.errors.reduce(
           (acc, error) => {
@@ -51,15 +45,21 @@ const Form = () => {
           {} as { [key in keyof FormType]: string | undefined }
         );
       });
-      console.log('State errors: ');
-      console.log({ errors });
     }
   };
 
   return (
     <>
       <h1>Native form</h1>
-      <form onSubmit={onSubmit} className="flex flex-col">
+      <button
+        className="cursor-pointer float-right mr-4"
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        Go back
+      </button>
+      <form onSubmit={onSubmit} className="form">
         <Input
           label="Name"
           type="text"
@@ -82,6 +82,7 @@ const Form = () => {
           label="Email"
           type="email"
           name="email"
+          placeholder="E-mail"
           required
           error={errors?.email}
         />
@@ -90,28 +91,33 @@ const Form = () => {
           label="Password"
           type="password"
           name="password"
+          placeholder="Password"
           required
           error={errors?.password}
         />
         <Input
-          label="confirmPassword"
+          label="Confirm Password"
           type="password"
           name="confirmPassword"
+          placeholder="Confirm your password"
           required
           error={errors?.confirmPassword}
         />
 
-        <fieldset>
+        <fieldset className="flex flex-col">
           <legend>Gender</legend>
-          <label>
-            Male
-            <input type="radio" name="gender" value={'male'} required />
-          </label>
-          <label>
-            Female
-            <input type="radio" name="gender" value={'female'} />
-          </label>
-          <div>{errors?.gender}</div>
+          <div className="flex gap-8 px-4">
+            <label>
+              Male
+              <input type="radio" name="gender" value={'male'} required />
+            </label>
+            <label>
+              Female
+              <input type="radio" name="gender" value={'female'} />
+            </label>
+          </div>
+
+          <div className="error">{errors?.gender}</div>
         </fieldset>
 
         <Input
@@ -134,36 +140,60 @@ const Form = () => {
             if (!file) {
               return;
             }
-            // if (image) {
-            //   URL.revokeObjectURL(image);
-            // }
-            // setImage(URL.createObjectURL(file));
+            if (image) {
+              URL.revokeObjectURL(image);
+            }
+            if (!allowedPictureTypes.types.includes(file.type)) {
+              setImage(undefined);
+            } else {
+              setImage(URL.createObjectURL(file));
+            }
           }}
         />
+        {image && (
+          <div className="rounded-lg w-36 relative">
+            <img src={image} width={144} />
+            <button
+              title="Remove"
+              onClick={() => {
+                setImage(undefined);
+              }}
+              className="absolute -right-2 -top-2 rounded-full border-2 border-error cursor-pointer bg-gray-400"
+            >
+              ❌
+            </button>
+          </div>
+        )}
 
-        <label>
-          <select name="country">
-            <option value="Not allowed Country"></option>
-            {allowedCountries.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-          <div>{errors?.country}</div>
+        <label className="flex w-full flex-col p-1">
+          <div className="flex justify-between items-center">
+            <span>Country</span>
+            <select name="country" className="dark:bg-bgdark">
+              <option value="Not allowed Country"></option>
+              {allowedCountries.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="error">{errors?.country}</div>
         </label>
 
-        <Button type="submit">Submit</Button>
+        <div className="w-full inline-flex justify-between">
+          <Button
+            variant="warn"
+            type="reset"
+            onClick={() => {
+              setImage(undefined);
+            }}
+          >
+            Reset
+          </Button>
+          <Button type="submit">Submit</Button>
+        </div>
       </form>
-      {/* {JSON.stringify(errors)} */}
-      <img ref={imageRef} />
-      <button
-        onClick={() => {
-          navigate(-1);
-        }}
-      >
-        Go back
-      </button>
     </>
   );
 };

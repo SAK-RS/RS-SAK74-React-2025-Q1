@@ -18,6 +18,5 @@ const formDatas = createSlice({
 
 export const { addEntry } = formDatas.actions;
 export const { selectStoredFormData } = formDatas.selectors;
-// const test = selectStoredFormData()
 
 export default formDatas;

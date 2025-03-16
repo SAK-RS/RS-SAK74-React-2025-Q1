@@ -8,14 +8,19 @@ const EntryCard: FC<{ entry: FormDataType }> = ({ entry }) => {
   const showPassword = password.split('').reduce((acc) => acc + '*', '');
   return (
     <div
-      className={cn('border p-4 my-4 w-1/6', {
-        'border-red-500': Date.now() - timeStamp < 1000 * 5,
-      })}
+      className={cn(
+        'overflow-auto border-2 border-primary p-4 rounded-md shadow-lg flex flex-col bg-gray-100 dark:bg-gray-600',
+        {
+          'animate-blink': Date.now() - timeStamp < 1000 * 10,
+        }
+      )}
     >
-      <h2>{name}</h2>
-      <img src={picture.data} alt={picture.name} />
-      <p>Password: {showPassword}</p>
-      {split(restFields)}
+      <h2 className="font-semibold">Name: {name}</h2>
+      <img src={picture.data} alt={picture.name} className="h-20 my-2" />
+      <div className="text-left">
+        <p>Password: {showPassword}</p>
+        {split(restFields)}
+      </div>
     </div>
   );
 };
