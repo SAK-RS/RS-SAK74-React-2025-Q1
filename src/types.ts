@@ -1,0 +1,11 @@
+export type Country = {
+  name: {
+    common: string;
+  };
+  population: number;
+  region: string;
+  flags: {
+    png: string;
+    alt: string;
+  };
+};
