@@ -1,11 +1,12 @@
-import type { FC, MouseEventHandler } from 'react';
+import { memo, type FC, type MouseEventHandler } from 'react';
 import { Country } from 'types';
 import CountryRow from './CountryRow';
 import type { SortBy, SortType } from './Home';
+import { useStoredCountries } from 'hooks/useStoredCountries';
 
 type ResultTabProps = {
   countries: Country[];
-  setSortBy: (param: SortBy) => void;
+  setSort: (param: SortBy) => void;
   togleSortDir: () => void;
   sortBy?: SortBy;
   sortDir?: SortType;
@@ -13,7 +14,7 @@ type ResultTabProps = {
 
 const ResultsTab: FC<ResultTabProps> = ({
   countries,
-  setSortBy,
+  setSort,
   togleSortDir,
   sortBy,
   sortDir,
@@ -23,12 +24,12 @@ const ResultsTab: FC<ResultTabProps> = ({
   }) => {
     switch (id) {
       case 'name-header': {
-        setSortBy('Name');
+        setSort('Name');
         togleSortDir();
         break;
       }
       case 'population-header': {
-        setSortBy('Population');
+        setSort('Population');
         togleSortDir();
         break;
       }
@@ -36,9 +37,11 @@ const ResultsTab: FC<ResultTabProps> = ({
         throw Error('Wrong sort element ID');
     }
   };
+  const { countries: storedCountries } = useStoredCountries();
+
   return (
     <>
-      <table className="border-spacing-6 border-separate">
+      <table className="border-spacing-x-6 border-spacing-y-0.5 border-separate">
         <thead>
           <tr>
             <th
@@ -46,9 +49,11 @@ const ResultsTab: FC<ResultTabProps> = ({
               id="name-header"
               className="cursor-pointer"
             >
-              <span>Name</span>
-              {sortBy === 'Name' && (
-                <span> {sortDir === 'dsc' ? '⬇' : '⬆'} </span>
+              <span>Name </span>
+              {sortBy === 'Name' ? (
+                <span>{sortDir === 'dsc' ? '⬇' : '⬆'} </span>
+              ) : (
+                '↕'
               )}
             </th>
             <th
@@ -56,9 +61,11 @@ const ResultsTab: FC<ResultTabProps> = ({
               id="population-header"
               className="cursor-pointer"
             >
-              <span>Population</span>
-              {sortBy === 'Population' && (
-                <span> {sortDir === 'dsc' ? '⬇' : '⬆'} </span>
+              <span>Population </span>
+              {sortBy === 'Population' ? (
+                <span>{sortDir === 'dsc' ? '⬇' : '⬆'} </span>
+              ) : (
+                '↕'
               )}
             </th>
             <th onClick={() => {}}>Region</th>
@@ -67,7 +74,15 @@ const ResultsTab: FC<ResultTabProps> = ({
         </thead>
         <tbody>
           {countries.map((country) => (
-            <CountryRow key={country.name.common} country={country} />
+            <CountryRow
+              key={country.name.common}
+              country={country}
+              hasVisited={storedCountries.some((storedName) =>
+                country.name.common
+                  .toUpperCase()
+                  .includes(storedName.toLocaleUpperCase())
+              )}
+            />
           ))}
         </tbody>
       </table>
@@ -75,4 +90,4 @@ const ResultsTab: FC<ResultTabProps> = ({
   );
 };
 
-export default ResultsTab;
+export default memo(ResultsTab);
