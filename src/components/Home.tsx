@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import type { Country } from 'types';
 import ResultsTab from './ResultsTab';
 import ControlPanel from './ControlPanel';
+import {
+  STORED_COUNTRIES_KEY,
+  useStoredCountries,
+} from 'hooks/useStoredCountries';
 
 export type SortType = 'asc' | 'dsc';
 export type SortBy = 'Name' | 'Population';
@@ -37,6 +41,7 @@ const Home = () => {
       }
     };
     fetch();
+    window.localStorage.removeItem(STORED_COUNTRIES_KEY);
   }, []);
 
   const sortCb = (a: Country, b: Country) => {
@@ -55,6 +60,8 @@ const Home = () => {
     }
   };
 
+  const { storeCountry } = useStoredCountries();
+
   return (
     <>
       <ControlPanel
@@ -66,6 +73,9 @@ const Home = () => {
         searchByName={searchByName}
         onNameChange={(name) => {
           setSearchByName(name);
+          if (name) {
+            storeCountry(name);
+          }
         }}
       />
       <ResultsTab

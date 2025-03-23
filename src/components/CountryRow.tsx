@@ -1,3 +1,4 @@
+import { useStoredCountries } from 'hooks/useStoredCountries';
 import type { FC, HtmlHTMLAttributes } from 'react';
 import type { Country } from 'types';
 import { cn } from 'utils/cn';
@@ -5,11 +6,17 @@ import { cn } from 'utils/cn';
 const CountryRow: FC<
   HtmlHTMLAttributes<HTMLElement> & { country: Country }
 > = ({ country: { name, population, region, flags }, className }) => {
+  const { countries } = useStoredCountries();
+
   return (
     <tr
       className={cn(
         'shadow-lg rounded-md outline-green-400',
-        { 'outline-2 ': false },
+        {
+          'outline-2 ': countries.some((storedName) =>
+            name.common.toUpperCase().includes(storedName.toUpperCase())
+          ),
+        },
         className
       )}
     >
